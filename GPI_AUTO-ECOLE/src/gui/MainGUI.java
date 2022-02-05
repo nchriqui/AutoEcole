@@ -8,14 +8,13 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
-import javax.swing.JTextField;
 
 import config.GameConfiguration;
 import engine.map.Map;
 import engine.process.GameBuilder;
 import engine.process.MobileElementManager;
 
-public class Main extends JFrame implements Runnable {
+public class MainGUI extends JFrame implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -30,7 +29,7 @@ public class Main extends JFrame implements Runnable {
 
 	private GameDisplay dashboard;
 
-	public Main(String title) {
+	public MainGUI(String title) {
 		super(title);
 		init();
 	}
@@ -41,12 +40,11 @@ public class Main extends JFrame implements Runnable {
 		contentPane.setLayout(new BorderLayout());
 
 		KeyControls keyControls = new KeyControls();
-		JTextField textField = new JTextField();
-		textField.addKeyListener(keyControls);
-		contentPane.add(textField, BorderLayout.SOUTH);
+		this.addKeyListener(keyControls);
 
 		map = GameBuilder.buildMap();
 		manager = GameBuilder.buildInitMobile(map);
+		
 		dashboard = new GameDisplay(map, manager);
 
 		dashboard.setPreferredSize(preferredSize);
@@ -57,6 +55,7 @@ public class Main extends JFrame implements Runnable {
 		setVisible(true);
 		setPreferredSize(preferredSize);
 		setResizable(false);
+		setLocationRelativeTo(null);
 	}
 
 	@Override
@@ -76,29 +75,49 @@ public class Main extends JFrame implements Runnable {
 
 		@Override
 		public void keyPressed(KeyEvent event) {
-			char keyChar = event.getKeyChar();
-			switch (keyChar) {
-
-			case 'q':
+			int keyCode = event.getKeyCode();
+			
+			
+			System.out.println(keyCode);
+			
+			System.out.println( "Old position :"+ manager.getCar().getPosition());
+			
+			switch (keyCode) {
+			case 37:
+				
+				System.out.println("DEPLACEMENT GAUCHE");
+				System.out.println( "New position :"+ manager.getCar().getPosition());
+				
 				manager.moveLeftCar();
 				BufferedImage image = paintStrategy.getImageLeft();
 				paintStrategy.setImage(image);
 				dashboard.setPaintStrategy(paintStrategy);
 				break;
-			case 'd':
-				manager.moveRighttCar();
-				image = paintStrategy.getImageRight();
-				paintStrategy.setImage(image);
-				dashboard.setPaintStrategy(paintStrategy);
-				;
-				break;
-			case 'z':
+			case 38:
+				
+				System.out.println("DEPLACEMENT GAUCHE");
+				System.out.println( "New position :"+ manager.getCar().getPosition());
+				
 				manager.moveUpCar();
 				image = paintStrategy.getImageUp();
 				paintStrategy.setImage(image);
 				dashboard.setPaintStrategy(paintStrategy);
+				
 				break;
-			case 'w':
+				
+			case 39:
+				System.out.println("DEPLACEMENT GAUCHE");
+				System.out.println( "New position :"+ manager.getCar().getPosition());
+				
+				manager.moveRightCar();
+				image = paintStrategy.getImageRight();
+				paintStrategy.setImage(image);
+				dashboard.setPaintStrategy(paintStrategy);
+				break;
+			case 40:
+				System.out.println("DEPLACEMENT GAUCHE");
+				System.out.println( "New position :"+ manager.getCar().getPosition());
+				
 				manager.moveDownCar();
 				image = paintStrategy.getImageDown();
 				paintStrategy.setImage(image);

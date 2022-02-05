@@ -1,11 +1,11 @@
-package TestGame;
+package testGame;
 
-import gui.Main;
+import gui.MainGUI;
 
 public class Test {
 	public static void main(String[] args) {
 
-		Main gameMain = new Main("driving school");
+		MainGUI gameMain = new MainGUI("driving school");
 
 		Thread gameThread = new Thread(gameMain);
 		gameThread.start();

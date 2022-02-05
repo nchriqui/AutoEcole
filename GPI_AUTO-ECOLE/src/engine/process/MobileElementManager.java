@@ -17,7 +17,6 @@ public class MobileElementManager {
 	public MobileElementManager(Map map) {
 		super();
 		this.map = map;
-		// image = rotateRight90(image);
 	}
 
 	public Car getCar() {
@@ -28,7 +27,7 @@ public class MobileElementManager {
 		this.car = car;
 	}
 
-	public void moveRighttCar() {
+	public void moveRightCar() {
 		Block position = car.getPosition();
 		int sizeBock = GameConfiguration.BLOCK_SIZE;
 		if (position.getColumn() < GameConfiguration.COLUMN_COUNT - 2) {
