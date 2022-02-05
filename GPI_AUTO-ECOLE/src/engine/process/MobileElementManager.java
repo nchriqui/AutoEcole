@@ -3,12 +3,7 @@ package engine.process;
 import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Car;
-import gui.PaintStrategy;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
-import config.GameConfiguration;
 
 public class MobileElementManager {
 	private Map map;
@@ -27,37 +22,42 @@ public class MobileElementManager {
 		this.car = car;
 	}
 
+	public void moveLeftCar() {
+		Block position = car.getPosition();
+		//DEPLACEMENT ENTRE LES MURS DU CIRCUIT
+		if (  ( (position.getLine() == 1 || position.getLine() == 2 || position.getLine() == 9 || position.getLine() == 10 ) &&   ( position.getColumn() >1 && position.getColumn()<=22) ) || ( (position.getLine()>=1 && position.getLine()<=10) && ( position.getColumn()==2 || position.getColumn()==23 )  ) ) {
+			//(position.getColumn() >= 1 && position.getColumn() <=23)) || ((position.getLine() >= 1 && position.getLine() <= 9) && ((position.getColumn() >= 1 && position.getColumn() <=2) || (position.getColumn() >= 22 && position.getColumn() <=23) ))) {
+			Block newPosition = map.getBlock(position.getLine(), position.getColumn()-1);
+			car.setPosition(newPosition);
+		}
+	}
+	
+	
 	public void moveRightCar() {
 		Block position = car.getPosition();
-		int sizeBock = GameConfiguration.BLOCK_SIZE;
-		if (position.getColumn() < GameConfiguration.COLUMN_COUNT - 1) {
-			Block newPosition = map.getBlock(position.getLine(), position.getColumn() + 1);
+		//DEPLACEMENT ENTRE LES MURS DU CIRCUIT
+		if (  ( (position.getLine() == 1 || position.getLine() == 2 || position.getLine() == 9 || position.getLine() == 10 ) &&   ( position.getColumn() >=1 && position.getColumn()<=21) ) || ( (position.getLine()>=1 && position.getLine()<=10) && ( position.getColumn()==1 || position.getColumn()==22 )  ) ) {
+				//(position.getColumn() >= 1 && position.getColumn() <=23)) || ((position.getLine() >= 1 && position.getLine() <= 9) && ((position.getColumn() >= 1 && position.getColumn() <=2) || (position.getColumn() >= 22 && position.getColumn() <=23) ))) {
+			Block newPosition = map.getBlock(position.getLine(), position.getColumn()+1);
 			car.setPosition(newPosition);
 		}
 	}
 
-	public void moveLeftCar() {
-		Block position = car.getPosition();
-		int sizeBock = GameConfiguration.BLOCK_SIZE;
-		if (position.getColumn() >= 1) {
-			Block newPosition = map.getBlock(position.getLine(), position.getColumn() - 1);
-			car.setPosition(newPosition);
-		}
-	}
 
 	public void moveDownCar() {
 		Block position = car.getPosition();
-		int sizeblock = GameConfiguration.BLOCK_SIZE;
-		if (position.getLine() < GameConfiguration.LINE_COUNT - 1) {
-			Block newPosition = map.getBlock(position.getLine() + 1, position.getColumn());
+		//DEPLACEMENT ENTRE LES MURS DU CIRCUIT
+		if (((position.getLine() == 1 || position.getLine() == 9) && (position.getColumn() >= 1 && position.getColumn() <=23)) || ((position.getLine() >= 1 && position.getLine() <= 9) && ((position.getColumn() >= 1 && position.getColumn() <=2) || (position.getColumn() >= 22 && position.getColumn() <=23) ))) {
+			Block newPosition = map.getBlock(position.getLine()+1, position.getColumn());
 			car.setPosition(newPosition);
 		}
 	}
 
 	public void moveUpCar() {
 		Block position = car.getPosition();
-		if (position.getLine() >=1) {
-			Block newPosition = map.getBlock(position.getLine() - 1, position.getColumn());
+		//DEPLACEMENT ENTRE LES MURS DU CIRCUIT
+		if (((position.getLine() == 2 || position.getLine() == 10) && (position.getColumn() >=1 && position.getColumn() <=22)) || ((position.getLine() >= 2 && position.getLine() <= 10) && ((position.getColumn() >= 1 && position.getColumn() <=2) || (position.getColumn() >= 22 && position.getColumn() <=23) ))) {
+			Block newPosition = map.getBlock(position.getLine()-1, position.getColumn());
 			car.setPosition(newPosition);
 		}
 	}

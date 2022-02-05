@@ -21,7 +21,7 @@ public class GameBuilder {
 	}
 
 	public static void intializeCar(Map map, MobileElementManager manager) {
-		Block block = map.getBlock(GameConfiguration.LINE_COUNT - 2, GameConfiguration.COLUMN_COUNT - 1);
+		Block block = map.getBlock(GameConfiguration.LINE_COUNT - 2, (GameConfiguration.COLUMN_COUNT - 1) /2);
 		Car car = new Car(block);
 		manager.setCar(car);
 	}

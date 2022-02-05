@@ -28,6 +28,7 @@ public class PaintStrategy extends JPanel {
 	public PaintStrategy() {
 		super();
 		try {
+			//RECUPERATION DES DIFFERENTES IMAGES DE NOTRE VOITURE ( UNE DIRECTION = UNE IMAGE )
 			Image = ImageIO.read(new File("src/images/mycarr.png"));
             ImageUp = ImageIO.read(new File("src/images/mycarr.png"));
             ImageRight = ImageIO.read(new File("src/images/mycarr3.png"));
@@ -39,7 +40,8 @@ public class PaintStrategy extends JPanel {
 		}
 
 	}
-
+	
+	// 4 Méthodes pour recuperer l'image associe au deplacement
 	public BufferedImage getImageUp() {
 		return ImageUp;
 	}
@@ -60,22 +62,22 @@ public class PaintStrategy extends JPanel {
 		this.Image = image;
 	}
 	
-	
+	//DESSIN DE LA CARTE DE JEU (DASHBOARD)
 	public void paint(Map map, Graphics graphics) {
 		int blockSize = GameConfiguration.BLOCK_SIZE;
 		Block[][] blocks = map.getBlocks();
 
-		
+		//PARCOURS DE LA MAP
 		for (int lineIndex =0; lineIndex < map.getLineCount(); lineIndex++) {
 			for (int columnIndex = 0; columnIndex < map.getColumnCount(); columnIndex++) {
 				Block block = blocks[lineIndex][columnIndex];
 				
-				
-				
-				
+				//DESSIN DU FOND DE LA CARTE 
 				graphics.setColor(Color.decode("#3aaf08"));
 				graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
 					
+				
+				//DESSIN DES FEU ROUGE (V1)
 				if ((lineIndex==5 && columnIndex==3) || (lineIndex==5 && columnIndex==21)) {
 					graphics.setColor(Color.RED);
 					graphics.fillRoundRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize, blockSize, blockSize);
@@ -85,6 +87,7 @@ public class PaintStrategy extends JPanel {
 			}
 		}
 		
+		//DESSIN ROUTE VERTICALE GAUCHE
 		for (int lineIndex = 1; lineIndex <= 10; lineIndex++) {
 			for (int columnIndex =1 ; columnIndex <=2; columnIndex++) {
 				Block block = blocks[lineIndex][columnIndex];
@@ -95,6 +98,7 @@ public class PaintStrategy extends JPanel {
 			}
 		}
 		
+		//DESSIN ROUTE VERTICALE DROITE
 		for (int lineIndex = 1; lineIndex <= 10; lineIndex++) {
 			for (int columnIndex =22 ; columnIndex <=23; columnIndex++) {
 				Block block = blocks[lineIndex][columnIndex];
@@ -105,6 +109,7 @@ public class PaintStrategy extends JPanel {
 			}
 		}
 		
+		//DESSIN ROUTE HORIZONTALE HAUTE
 		for (int lineIndex = 1; lineIndex <= 2; lineIndex++) {
 			for (int columnIndex =1 ; columnIndex <= 23; columnIndex++) {
 				Block block = blocks[lineIndex][columnIndex];
@@ -116,6 +121,7 @@ public class PaintStrategy extends JPanel {
 			}
 		}
 		
+		//DESSIN ROUTE HORIZONTALE BASSE
 		for (int lineIndex = 9; lineIndex <= 10; lineIndex++) {
 			for (int columnIndex =1 ; columnIndex <= 23; columnIndex++) {
 				Block block = blocks[lineIndex][columnIndex];
@@ -128,7 +134,7 @@ public class PaintStrategy extends JPanel {
 		}
 	}
 	
-
+	//DESSIN DE LA VOITURE (IMAGE)
 	public void paint(Car car, Graphics graphics) {
 
 		Block position = car.getPosition();
