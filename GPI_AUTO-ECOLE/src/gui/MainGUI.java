@@ -84,21 +84,21 @@ public class MainGUI extends JFrame implements Runnable {
 			
 			switch (keyCode) {
 			case 37:
-				
+				manager.moveLeftCar();
 				System.out.println("DEPLACEMENT GAUCHE");
 				System.out.println( "New position :"+ manager.getCar().getPosition());
 				
-				manager.moveLeftCar();
+				
 				BufferedImage image = paintStrategy.getImageLeft();
 				paintStrategy.setImage(image);
 				dashboard.setPaintStrategy(paintStrategy);
 				break;
 			case 38:
-				
+				manager.moveUpCar();
 				System.out.println("DEPLACEMENT GAUCHE");
 				System.out.println( "New position :"+ manager.getCar().getPosition());
 				
-				manager.moveUpCar();
+				
 				image = paintStrategy.getImageUp();
 				paintStrategy.setImage(image);
 				dashboard.setPaintStrategy(paintStrategy);
@@ -106,19 +106,21 @@ public class MainGUI extends JFrame implements Runnable {
 				break;
 				
 			case 39:
+				manager.moveRightCar();
 				System.out.println("DEPLACEMENT GAUCHE");
 				System.out.println( "New position :"+ manager.getCar().getPosition());
 				
-				manager.moveRightCar();
+				
 				image = paintStrategy.getImageRight();
 				paintStrategy.setImage(image);
 				dashboard.setPaintStrategy(paintStrategy);
 				break;
 			case 40:
+				manager.moveDownCar();
 				System.out.println("DEPLACEMENT GAUCHE");
 				System.out.println( "New position :"+ manager.getCar().getPosition());
 				
-				manager.moveDownCar();
+				
 				image = paintStrategy.getImageDown();
 				paintStrategy.setImage(image);
 				dashboard.setPaintStrategy(paintStrategy);

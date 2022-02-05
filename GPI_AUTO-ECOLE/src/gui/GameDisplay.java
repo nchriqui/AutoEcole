@@ -1,7 +1,7 @@
 package gui;
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
+
 
 import javax.swing.JPanel;
 
@@ -34,7 +34,10 @@ public class GameDisplay extends JPanel {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		Car car = manager.getCar();
+		
+		paintStrategy.paint(map, g);
+		
+		Car car = manager.getCar();		
 		paintStrategy.paint(car, g);
 
 	}

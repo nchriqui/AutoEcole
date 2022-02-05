@@ -30,7 +30,7 @@ public class MobileElementManager {
 	public void moveRightCar() {
 		Block position = car.getPosition();
 		int sizeBock = GameConfiguration.BLOCK_SIZE;
-		if (position.getColumn() < GameConfiguration.COLUMN_COUNT - 2) {
+		if (position.getColumn() < GameConfiguration.COLUMN_COUNT - 1) {
 			Block newPosition = map.getBlock(position.getLine(), position.getColumn() + 1);
 			car.setPosition(newPosition);
 		}
@@ -39,7 +39,7 @@ public class MobileElementManager {
 	public void moveLeftCar() {
 		Block position = car.getPosition();
 		int sizeBock = GameConfiguration.BLOCK_SIZE;
-		if (position.getColumn() > 0) {
+		if (position.getColumn() >= 1) {
 			Block newPosition = map.getBlock(position.getLine(), position.getColumn() - 1);
 			car.setPosition(newPosition);
 		}
@@ -48,7 +48,7 @@ public class MobileElementManager {
 	public void moveDownCar() {
 		Block position = car.getPosition();
 		int sizeblock = GameConfiguration.BLOCK_SIZE;
-		if (position.getLine() < GameConfiguration.LINE_COUNT - 2) {
+		if (position.getLine() < GameConfiguration.LINE_COUNT - 1) {
 			Block newPosition = map.getBlock(position.getLine() + 1, position.getColumn());
 			car.setPosition(newPosition);
 		}
@@ -56,7 +56,7 @@ public class MobileElementManager {
 
 	public void moveUpCar() {
 		Block position = car.getPosition();
-		if (position.getLine() > 0) {
+		if (position.getLine() >=1) {
 			Block newPosition = map.getBlock(position.getLine() - 1, position.getColumn());
 			car.setPosition(newPosition);
 		}
