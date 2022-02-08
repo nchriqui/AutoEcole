@@ -1,141 +1,60 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.Graphics;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import javax.swing.JPanel;
 
-import config.GameConfiguration;
-import engine.map.Block;
-import engine.map.Map;
+import Config.GameConfiguration;
+import engine.Map.Block;
 import engine.mobile.Car;
+import engine.mobile.Light;
+import engine.mobile.Road;
+import engine.process.GameUtility;
 
 public class PaintStrategy extends JPanel {
-
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 2L;
 
-	private BufferedImage Image;
-	private BufferedImage ImageUp;
-	private BufferedImage ImageRight;
-	private BufferedImage ImageLeft;
-	private BufferedImage ImageDown;
+	private Image Image;
+	private Image ImageUp;
+	private Image ImageRight;
+	private Image ImageLeft;
+	private Image ImageDown;
 
-	public PaintStrategy() {
+	public PaintStrategy(){
 		super();
-		try {
-			//RECUPERATION DES DIFFERENTES IMAGES DE NOTRE VOITURE ( UNE DIRECTION = UNE IMAGE )
-			Image = ImageIO.read(new File("src/images/mycarr.png"));
-            ImageUp = ImageIO.read(new File("src/images/mycarr.png"));
-            ImageRight = ImageIO.read(new File("src/images/mycarr3.png"));
-            ImageLeft = ImageIO.read(new File("src/images/mycarr2.png"));
-            ImageDown = ImageIO.read(new File("src/images/mycarr4.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Image = GameUtility.readImage("src/Images/mycarr.png");
+		ImageUp = GameUtility.readImage("src/Images/mycarr.png");
+		ImageRight = GameUtility.readImage("src/Images/mycarr3.png");
+		ImageLeft = GameUtility.readImage("src/Images/mycarr2.png");
+		ImageDown = GameUtility.readImage("src/Images/mycarr4.png");
 
 	}
-	
-	// 4 Méthodes pour recuperer l'image associe au deplacement
-	public BufferedImage getImageUp() {
+
+	public Image getImageUp() {
 		return ImageUp;
 	}
 
-	public BufferedImage getImageRight() {
+	public Image getImageRight() {
 		return ImageRight;
 	}
 
-	public BufferedImage getImageLeft() {
+	public Image getImageLeft() {
 		return ImageLeft;
 	}
 
-	public BufferedImage getImageDown() {
+	public Image getImageDown() {
 		return ImageDown;
 	}
 
-	public void setImage(BufferedImage image) {
+	public void setImage(Image image) {
 		this.Image = image;
 	}
-	
-	//DESSIN DE LA CARTE DE JEU (DASHBOARD)
-	public void paint(Map map, Graphics graphics) {
-		int blockSize = GameConfiguration.BLOCK_SIZE;
-		Block[][] blocks = map.getBlocks();
 
-		//PARCOURS DE LA MAP
-		for (int lineIndex =0; lineIndex < map.getLineCount(); lineIndex++) {
-			for (int columnIndex = 0; columnIndex < map.getColumnCount(); columnIndex++) {
-				Block block = blocks[lineIndex][columnIndex];
-				
-				//DESSIN DU FOND DE LA CARTE 
-				graphics.setColor(Color.decode("#3aaf08"));
-				graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
-					
-				
-				//DESSIN DES FEU ROUGE (V1)
-				if ((lineIndex==5 && columnIndex==3) || (lineIndex==5 && columnIndex==21)) {
-					graphics.setColor(Color.RED);
-					graphics.fillRoundRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize, blockSize, blockSize);
-				}
-			
-			
-			}
-		}
-		
-		//DESSIN ROUTE VERTICALE GAUCHE
-		for (int lineIndex = 1; lineIndex <= 10; lineIndex++) {
-			for (int columnIndex =1 ; columnIndex <=2; columnIndex++) {
-				Block block = blocks[lineIndex][columnIndex];
-
-				graphics.setColor(Color.BLACK);
-				graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
-				
-			}
-		}
-		
-		//DESSIN ROUTE VERTICALE DROITE
-		for (int lineIndex = 1; lineIndex <= 10; lineIndex++) {
-			for (int columnIndex =22 ; columnIndex <=23; columnIndex++) {
-				Block block = blocks[lineIndex][columnIndex];
-
-				graphics.setColor(Color.BLACK);
-				graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
-				
-			}
-		}
-		
-		//DESSIN ROUTE HORIZONTALE HAUTE
-		for (int lineIndex = 1; lineIndex <= 2; lineIndex++) {
-			for (int columnIndex =1 ; columnIndex <= 23; columnIndex++) {
-				Block block = blocks[lineIndex][columnIndex];
-
-				graphics.setColor(Color.BLACK);
-				graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
-				
-
-			}
-		}
-		
-		//DESSIN ROUTE HORIZONTALE BASSE
-		for (int lineIndex = 9; lineIndex <= 10; lineIndex++) {
-			for (int columnIndex =1 ; columnIndex <= 23; columnIndex++) {
-				Block block = blocks[lineIndex][columnIndex];
-
-				graphics.setColor(Color.BLACK);
-				graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
-			
-				
-			}
-		}
-	}
-	
-	//DESSIN DE LA VOITURE (IMAGE)
-	public void paint(Car car, Graphics graphics) {
+	public void paint(Car car, Graphics2D graphics) {
 
 		Block position = car.getPosition();
 
@@ -144,9 +63,33 @@ public class PaintStrategy extends JPanel {
 		int y = position.getLine();
 		int x = position.getColumn();
         
-		graphics.drawImage(Image, x * blockSize , y * blockSize, null);
+		graphics.drawImage(Image, x * blockSize , y * blockSize,blockSize,blockSize,null);
 		
-
+	}
+	
+	public void paintHorizontalRoad(Graphics2D g , Road road) {
+		Block position = road.getPosition();
+		g.drawImage(GameUtility.readImage("src/Images/routeHorizontal.png"),position.getLine()*GameConfiguration.BLOCK_SIZE,position.getColumn(),GameConfiguration.BLOCK_SIZE,GameConfiguration.BLOCK_SIZE,null);
+	}
+	
+	public void paintRoad(Graphics2D g , Road road) {
+		Block position = road.getPosition();	
+		g.drawImage(GameUtility.readImage("src/Images/routeHorizontal.png"),position.getLine()*GameConfiguration.BLOCK_SIZE,GameConfiguration.BLOCK_SIZE*GameConfiguration.COLUMN_COUNT,GameConfiguration.BLOCK_SIZE,GameConfiguration.BLOCK_SIZE,null);
+	}
+	
+	public void paintVerticalRoad(Graphics2D g , Road road) {
+		Block position = road.getPosition();	
+		g.drawImage(GameUtility.readImage("src/Images/routeVertical.png"),position.getLine(),position.getColumn()*GameConfiguration.BLOCK_SIZE,GameConfiguration.BLOCK_SIZE,GameConfiguration.BLOCK_SIZE,null);
+	}
+	public void paintRoad2(Graphics2D g, Road road) {
+		Block position = road.getPosition();
+		g.drawImage(GameUtility.readImage("src/Images/routeVertical.png"),GameConfiguration.BLOCK_SIZE*(GameConfiguration.LINE_COUNT-1),position.getColumn()*GameConfiguration.BLOCK_SIZE,GameConfiguration.BLOCK_SIZE,GameConfiguration.BLOCK_SIZE,null);
+	}
+	
+	public void paintLights(Graphics2D g2) {
+		//Block position = light.getPosition();
+		g2.drawImage(GameUtility.readImage("src/Images/redLightUp.png"),30+5,30+5,GameConfiguration.BLOCK_SIZE-15,GameConfiguration.BLOCK_SIZE-15,null);
+		g2.drawImage(GameUtility.readImage("src/Images/redLightLeft.png"),30+5,570+5,GameConfiguration.BLOCK_SIZE-15,GameConfiguration.BLOCK_SIZE-15,null);
 	}
 
 }
