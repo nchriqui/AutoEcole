@@ -36,6 +36,4 @@ public class Map {
 			return blocks[line][column];
 		}
 
-
-
 }

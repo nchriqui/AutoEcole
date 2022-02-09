@@ -21,5 +21,4 @@ public class Block {
 	public String toString() {
 		return "Block [line=" + line + ", column=" + column + "]";
 	}
-
 }
