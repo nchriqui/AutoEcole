@@ -29,7 +29,7 @@ public class PaintStrategy extends JPanel {
 		super();
 		try {
 			//RECUPERATION DES DIFFERENTES IMAGES DE NOTRE VOITURE ( UNE DIRECTION = UNE IMAGE )
-			Image = ImageIO.read(new File("src/images/mycarr.png"));
+			Image = ImageIO.read(new File("src/images/mycarr3.png"));
             ImageUp = ImageIO.read(new File("src/images/mycarr.png"));
             ImageRight = ImageIO.read(new File("src/images/mycarr3.png"));
             ImageLeft = ImageIO.read(new File("src/images/mycarr2.png"));

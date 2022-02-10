@@ -14,7 +14,8 @@ public class GameBuilder {
 
 	public static MobileElementManager buildInitMobile(Map map) {
 		MobileElementManager manager = new MobileElementManager(map);
-
+		manager.setLastMoveRight(true);
+		
 		intializeCar(map, manager);
 		
 		return manager;
