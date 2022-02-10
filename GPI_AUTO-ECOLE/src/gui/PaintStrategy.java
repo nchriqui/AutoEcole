@@ -2,7 +2,7 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
-
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,51 +14,45 @@ import config.GameConfiguration;
 import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Car;
+import engine.process.GameUtility;
 
 public class PaintStrategy extends JPanel {
 
 	private static final long serialVersionUID = 2L;
 
-	private BufferedImage Image;
-	private BufferedImage ImageUp;
-	private BufferedImage ImageRight;
-	private BufferedImage ImageLeft;
-	private BufferedImage ImageDown;
+	private  Image Image;
+	private  Image ImageUp;
+	private  Image ImageRight;
+	private  Image ImageLeft;
+	private  Image ImageDown;
 
 	public PaintStrategy() {
-		super();
-		try {
-			//RECUPERATION DES DIFFERENTES IMAGES DE NOTRE VOITURE ( UNE DIRECTION = UNE IMAGE )
-			Image = ImageIO.read(new File("src/images/mycarr3.png"));
-            ImageUp = ImageIO.read(new File("src/images/mycarr.png"));
-            ImageRight = ImageIO.read(new File("src/images/mycarr3.png"));
-            ImageLeft = ImageIO.read(new File("src/images/mycarr2.png"));
-            ImageDown = ImageIO.read(new File("src/images/mycarr4.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		//RECUPERATION DES DIFFERENTES IMAGES DE NOTRE VOITURE ( UNE DIRECTION = UNE IMAGE )
+		Image = GameUtility.readImage("src/images/mycarr33.png");
+        ImageUp = GameUtility.readImage("src/images/mycarr.png");
+        ImageRight = GameUtility.readImage("src/images/mycarr3.png");
+        ImageLeft = GameUtility.readImage("src/images/mycarr2.png");
+        ImageDown = GameUtility.readImage("src/images/mycarr4.png");
 	}
 	
 	// 4 Méthodes pour recuperer l'image associe au deplacement
-	public BufferedImage getImageUp() {
+	public Image getImageUp() {
 		return ImageUp;
 	}
 
-	public BufferedImage getImageRight() {
+	public Image getImageRight() {
 		return ImageRight;
 	}
 
-	public BufferedImage getImageLeft() {
+	public Image getImageLeft() {
 		return ImageLeft;
 	}
 
-	public BufferedImage getImageDown() {
+	public Image getImageDown() {
 		return ImageDown;
 	}
 
-	public void setImage(BufferedImage image) {
+	public void setImage(Image image) {
 		this.Image = image;
 	}
 	

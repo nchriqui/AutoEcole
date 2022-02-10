@@ -5,7 +5,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
@@ -13,6 +12,8 @@ import config.GameConfiguration;
 import engine.map.Map;
 import engine.process.GameBuilder;
 import engine.process.MobileElementManager;
+
+import java.awt.Image;
 
 public class MainGUI extends JFrame implements Runnable {
 
@@ -29,7 +30,7 @@ public class MainGUI extends JFrame implements Runnable {
 
 	private GameDisplay dashboard;
 
-	private BufferedImage image;
+	private Image image;
 
 	public MainGUI(String title) {
 		super(title);
