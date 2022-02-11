@@ -3,6 +3,7 @@ package engine.process;
 import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Car;
+import engine.mobile.Light;
 import config.GameConfiguration;
 
 public class GameBuilder {
@@ -17,6 +18,7 @@ public class GameBuilder {
 		manager.setLastMoveRight(true);
 		
 		intializeCar(map, manager);
+		initializeLight(map,manager);
 		
 		return manager;
 	}
@@ -26,5 +28,19 @@ public class GameBuilder {
 		Car car = new Car(block);
 		manager.setCar(car);
 	}
+	
+	public static void initializeLight(Map map, MobileElementManager manager) {
+
+		Block blockRightLight = map.getBlock(5, 21);
+		Block blockLeftLight = map.getBlock(5, 3);
+		
+		Light LeftLight = new Light(blockLeftLight,false);
+		manager.setLeftLight(LeftLight);
+		
+		
+		Light rightLight = new Light(blockRightLight,false);
+		manager.setRightLight(rightLight);
+	}
+
 
 }

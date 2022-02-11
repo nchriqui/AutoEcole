@@ -5,12 +5,16 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JFrame;
 
 import config.GameConfiguration;
 import engine.map.Map;
+import engine.process.CheckLight;
 import engine.process.GameBuilder;
+import engine.process.GameUtility;
 import engine.process.MobileElementManager;
 
 import java.awt.Image;
@@ -30,7 +34,13 @@ public class MainGUI extends JFrame implements Runnable {
 
 	private GameDisplay dashboard;
 
-	private Image image;
+	private Image imageCar;
+	private Image imageLeftLight ;
+	private Image imageRightLight ;
+		
+		
+	private CheckLight checkLeftLight;
+	private CheckLight checkRightLight;
 
 	public MainGUI(String title) {
 		super(title);
@@ -91,8 +101,8 @@ public class MainGUI extends JFrame implements Runnable {
 					manager.moveLeftCar();
 					System.out.println("New position :" + manager.getCar().getPosition());
 	
-					image = paintStrategy.getImageLeft();
-					paintStrategy.setImage(image);
+					imageCar = paintStrategy.getImageLeft();
+					paintStrategy.setImage(imageCar);
 					dashboard.setPaintStrategy(paintStrategy);
 					
 					//Sauvegarde du dernier deplacement efffectue
@@ -112,8 +122,8 @@ public class MainGUI extends JFrame implements Runnable {
 					manager.moveUpCar();
 					System.out.println("New position :" + manager.getCar().getPosition());
 	
-					image = paintStrategy.getImageUp();
-					paintStrategy.setImage(image);
+					imageCar = paintStrategy.getImageUp();
+					paintStrategy.setImage(imageCar);
 					dashboard.setPaintStrategy(paintStrategy);
 					
 					//Sauvegarde du dernier deplacement efffectue
@@ -134,8 +144,8 @@ public class MainGUI extends JFrame implements Runnable {
 					manager.moveRightCar();
 					System.out.println("New position :" + manager.getCar().getPosition());
 	
-					image = paintStrategy.getImageRight();
-					paintStrategy.setImage(image);
+					imageCar = paintStrategy.getImageRight();
+					paintStrategy.setImage(imageCar);
 					dashboard.setPaintStrategy(paintStrategy);
 					
 					//Sauvegarde du dernier deplacement efffectue
@@ -155,8 +165,8 @@ public class MainGUI extends JFrame implements Runnable {
 					manager.moveDownCar();
 					System.out.println("New position :" + manager.getCar().getPosition());
 	
-					image = paintStrategy.getImageDown();
-					paintStrategy.setImage(image);
+					imageCar = paintStrategy.getImageDown();
+					paintStrategy.setImage(imageCar);
 					dashboard.setPaintStrategy(paintStrategy);
 					
 					//Sauvegarde du dernier deplacement efffectue
@@ -170,6 +180,54 @@ public class MainGUI extends JFrame implements Runnable {
 				break;
 			default:
 				break;
+			}
+			
+			checkLeftLight= new CheckLight(manager.getCar(), manager.getLeftLight());
+			checkRightLight= new CheckLight(manager.getCar(), manager.getRightLight());
+			if ( (manager.getRightLight().getGo()==false &&  checkRightLight.verifposition()==true)){
+				imageRightLight = paintStrategy.getGreenRightLight();
+				paintStrategy.setRedRightLight(imageRightLight);
+				dashboard.setPaintStrategy(paintStrategy);
+				System.out.println("LE FEU DE DROITE EST PASSE AU VERT");
+				
+				Timer timer = new Timer();
+				timer.schedule(new TimerTask() {
+					
+					@Override
+					public void run() {
+						System.out.println("FIN DU TIMER");
+						System.out.println("LE FEU DE DROITE REPASSE AU ROUGE");
+						paintStrategy.setRedRightLight(GameUtility.readImage("src/Images/redLight.png"));
+						dashboard.setPaintStrategy(paintStrategy);
+						manager.getRightLight().setGo(false);
+						System.out.println(manager.getRightLight().getGo());
+					}
+				}, 5000);
+			}
+			
+			
+			if ((manager.getLeftLight().getGo()==false && checkLeftLight.verifposition()==true)){
+				manager.getLeftLight().setGo(true);
+				imageLeftLight = paintStrategy.getGreenLeftLight();
+				paintStrategy.setRedLeftLight(imageLeftLight);
+				dashboard.setPaintStrategy(paintStrategy);
+				System.out.println("LE FEU DE GAUCHE EST PASSE AU VERT");
+				
+				
+				Timer timer = new Timer();
+				timer.schedule(new TimerTask() {
+					
+					@Override
+					public void run() {
+						System.out.println("FIN DU TIMER");
+						System.out.println("LE FEU DE GAUCHE REPASSE AU ROUGE");
+						paintStrategy.setRedLeftLight(GameUtility.readImage("src/Images/redLight.png"));
+						dashboard.setPaintStrategy(paintStrategy);
+						manager.getLeftLight().setGo(false);
+						System.out.println(manager.getLeftLight().getGo());
+					}
+				}, 5000);
+				
 			}
 		}
 

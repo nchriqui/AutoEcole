@@ -3,59 +3,105 @@ package gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import config.GameConfiguration;
 import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Car;
+import engine.mobile.Light;
 import engine.process.GameUtility;
 
 public class PaintStrategy extends JPanel {
 
 	private static final long serialVersionUID = 2L;
 
-	private  Image Image;
-	private  Image ImageUp;
-	private  Image ImageRight;
-	private  Image ImageLeft;
-	private  Image ImageDown;
+	private  Image image;
+	private  Image imageUp;
+	private  Image imageRight;
+	private  Image imageLeft;
+	private  Image imageDown;
 
+	private  Image redLeftLight;
+	private Image greenLeftLight;
+	
+	
+	private Image redRightLight;
+	private Image greenRightLight;
+	
 	public PaintStrategy() {
 		//RECUPERATION DES DIFFERENTES IMAGES DE NOTRE VOITURE ( UNE DIRECTION = UNE IMAGE )
-		Image = GameUtility.readImage("src/images/mycarr33.png");
-        ImageUp = GameUtility.readImage("src/images/mycarr.png");
-        ImageRight = GameUtility.readImage("src/images/mycarr3.png");
-        ImageLeft = GameUtility.readImage("src/images/mycarr2.png");
-        ImageDown = GameUtility.readImage("src/images/mycarr4.png");
+		image = GameUtility.readImage("src/images/mycarr3.png");
+        imageUp = GameUtility.readImage("src/images/mycarr.png");
+        imageRight = GameUtility.readImage("src/images/mycarr3.png");
+        imageLeft = GameUtility.readImage("src/images/mycarr2.png");
+        imageDown = GameUtility.readImage("src/images/mycarr4.png");
+	
+        redLeftLight = GameUtility.readImage("src/Images/redLight.png");
+        greenLeftLight = GameUtility.readImage("src/Images/greenLight.png");
+        
+        redRightLight = GameUtility.readImage("src/Images/redLight.png");
+        greenRightLight = GameUtility.readImage("src/Images/greenLight.png");
 	}
 	
 	// 4 Méthodes pour recuperer l'image associe au deplacement
 	public Image getImageUp() {
-		return ImageUp;
+		return imageUp;
 	}
 
 	public Image getImageRight() {
-		return ImageRight;
+		return imageRight;
 	}
 
 	public Image getImageLeft() {
-		return ImageLeft;
+		return imageLeft;
 	}
 
 	public Image getImageDown() {
-		return ImageDown;
+		return imageDown;
 	}
 
 	public void setImage(Image image) {
-		this.Image = image;
+		this.image = image;
 	}
 	
+	
+	
+	
+	
+	public Image getRedLeftLight() {
+		return redLeftLight;
+	}
+
+	public void setRedLeftLight(Image redLeftLight) {
+		this.redLeftLight = redLeftLight;
+	}
+
+	public Image getGreenLeftLight() {
+		return greenLeftLight;
+	}
+
+	public void setGreenLeftLight(Image greenLeftLight) {
+		this.greenLeftLight = greenLeftLight;
+	}
+
+	public Image getRedRightLight() {
+		return redRightLight;
+	}
+
+	public void setRedRightLight(Image redRightLight) {
+		this.redRightLight = redRightLight;
+	}
+
+	public Image getGreenRightLight() {
+		return greenRightLight;
+	}
+
+	public void setGreenRightLight(Image greenRightLight) {
+		this.greenRightLight = greenRightLight;
+	}
+
 	//DESSIN DE LA CARTE DE JEU (DASHBOARD)
 	public void paint(Map map, Graphics graphics) {
 		int blockSize = GameConfiguration.BLOCK_SIZE;
@@ -67,16 +113,9 @@ public class PaintStrategy extends JPanel {
 				Block block = blocks[lineIndex][columnIndex];
 				
 				//DESSIN DU FOND DE LA CARTE 
-				graphics.setColor(Color.decode("#3aaf08"));
+				graphics.setColor(Color.decode("#005400"));
 				graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
-					
-				
-				//DESSIN DES FEU ROUGE (V1)
-				if ((lineIndex==5 && columnIndex==3) || (lineIndex==5 && columnIndex==21)) {
-					graphics.setColor(Color.RED);
-					graphics.fillRoundRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize, blockSize, blockSize);
-				}
-			
+
 			
 			}
 		}
@@ -86,7 +125,7 @@ public class PaintStrategy extends JPanel {
 			for (int columnIndex =1 ; columnIndex <=2; columnIndex++) {
 				Block block = blocks[lineIndex][columnIndex];
 
-				graphics.setColor(Color.BLACK);
+				graphics.setColor(Color.decode("#606060"));
 				graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
 				
 			}
@@ -97,7 +136,7 @@ public class PaintStrategy extends JPanel {
 			for (int columnIndex =22 ; columnIndex <=23; columnIndex++) {
 				Block block = blocks[lineIndex][columnIndex];
 
-				graphics.setColor(Color.BLACK);
+				graphics.setColor(Color.decode("#606060"));
 				graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
 				
 			}
@@ -108,7 +147,7 @@ public class PaintStrategy extends JPanel {
 			for (int columnIndex =1 ; columnIndex <= 23; columnIndex++) {
 				Block block = blocks[lineIndex][columnIndex];
 
-				graphics.setColor(Color.BLACK);
+				graphics.setColor(Color.decode("#606060"));
 				graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
 				
 
@@ -120,12 +159,38 @@ public class PaintStrategy extends JPanel {
 			for (int columnIndex =1 ; columnIndex <= 23; columnIndex++) {
 				Block block = blocks[lineIndex][columnIndex];
 
-				graphics.setColor(Color.BLACK);
+				graphics.setColor(Color.decode("#606060"));
 				graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
 			
 				
 			}
 		}
+	}
+	
+	public void paintLeftLight(Graphics graphics, Light light) {
+		Block position = light.getPosition();
+
+		int blockSize = GameConfiguration.BLOCK_SIZE;
+
+		int y = position.getLine();
+		int x = position.getColumn();
+		graphics.drawImage(redLeftLight, x * blockSize , y * blockSize, null);
+		
+//		graphics.setColor(Color.RED);
+//		graphics.fillRoundRect(x* blockSize, y * blockSize, blockSize, blockSize, blockSize, blockSize);
+	}
+	
+	public void paintRightLight(Graphics graphics, Light light) {
+		Block position = light.getPosition();
+
+		int blockSize = GameConfiguration.BLOCK_SIZE;
+
+		int y = position.getLine();
+		int x = position.getColumn();
+		graphics.drawImage(redRightLight, x * blockSize , y * blockSize, null);
+		
+//		graphics.setColor(Color.RED);
+//		graphics.fillRoundRect(x* blockSize, y * blockSize, blockSize, blockSize, blockSize, blockSize);
 	}
 	
 	//DESSIN DE LA VOITURE (IMAGE)
@@ -138,7 +203,7 @@ public class PaintStrategy extends JPanel {
 		int y = position.getLine();
 		int x = position.getColumn();
         
-		graphics.drawImage(Image, x * blockSize , y * blockSize, null);
+		graphics.drawImage(image, x * blockSize , y * blockSize, null);
 		
 
 	}

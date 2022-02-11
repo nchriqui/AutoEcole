@@ -3,6 +3,7 @@ package engine.process;
 import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Car;
+import engine.mobile.Light;
 
 public class MobileElementManager {
 	private Map map;
@@ -13,8 +14,10 @@ public class MobileElementManager {
 	private boolean lastMoveRight = false;
 	private boolean lastMoveLeft = false;
 
+	private Light leftLight;
+	private Light rightLight;
+	
 	public MobileElementManager(Map map) {
-		super();
 		this.map = map;
 	}
 
@@ -56,6 +59,22 @@ public class MobileElementManager {
 
 	public void setLastMoveLeft(boolean lastMoveLeft) {
 		this.lastMoveLeft = lastMoveLeft;
+	}
+
+	public Light getLeftLight() {
+		return leftLight;
+	}
+
+	public void setLeftLight(Light leftLight) {
+		this.leftLight = leftLight;
+	}
+
+	public Light getRightLight() {
+		return rightLight;
+	}
+
+	public void setRightLight(Light rightLight) {
+		this.rightLight = rightLight;
 	}
 
 	public void moveLeftCar() {

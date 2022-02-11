@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import engine.process.MobileElementManager;
 import engine.map.Map;
 import engine.mobile.Car;
+import engine.mobile.Light;
 
 public class GameDisplay extends JPanel {
 	private static final long serialVersionUID = 2L;
@@ -39,6 +40,12 @@ public class GameDisplay extends JPanel {
 		
 		Car car = manager.getCar();		
 		paintStrategy.paint(car, g);
+		
+		Light Leftlight = manager.getLeftLight();
+		paintStrategy.paintLeftLight(g, Leftlight);
+		
+		Light Rightlight = manager.getRightLight();
+		paintStrategy.paintRightLight(g, Rightlight);
 
 	}
 
