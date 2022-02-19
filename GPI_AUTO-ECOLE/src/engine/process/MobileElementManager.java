@@ -16,7 +16,7 @@ public class MobileElementManager {
 
 	private Light leftLight;
 	private Light rightLight;
-	
+
 	public MobileElementManager(Map map) {
 		this.map = map;
 	}

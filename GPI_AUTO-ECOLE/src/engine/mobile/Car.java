@@ -2,26 +2,12 @@ package engine.mobile;
 
 import engine.map.Block;
 
-public class Car { 
-	private Block Position ;
+public class Car extends MobileElement{
 
 	public Car(Block position) {
-		super();
-		Position = position;
+		super(position);
 	}
 
-	public Block getPosition() {
-		return Position;
-	}
-
-	public void setPosition(Block position) {
-		Position = position;
-	}
-
-	@Override
-	public String toString() {
-		return "Car [Position=" + Position + "]";
-	} 
 }
 	
 	

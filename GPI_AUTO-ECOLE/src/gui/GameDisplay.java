@@ -2,13 +2,14 @@ package gui;
 
 import java.awt.Graphics;
 
-
 import javax.swing.JPanel;
 
-import engine.process.MobileElementManager;
+import engine.fixed.Road;
 import engine.map.Map;
 import engine.mobile.Car;
 import engine.mobile.Light;
+import engine.process.MobileElementManager;
+import engine.process.RoadBuilder;
 
 public class GameDisplay extends JPanel {
 	private static final long serialVersionUID = 2L;
@@ -17,6 +18,8 @@ public class GameDisplay extends JPanel {
 	private MobileElementManager manager;
 
 	private PaintStrategy paintStrategy = new PaintStrategy();
+
+	private RoadBuilder roadBuilder;
 
 	public GameDisplay(Map map, MobileElementManager manager) {
 		this.map = map;
@@ -35,15 +38,20 @@ public class GameDisplay extends JPanel {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		
+
 		paintStrategy.paint(map, g);
-		
-		Car car = manager.getCar();		
+
+		roadBuilder = new RoadBuilder(map.getLineCount(), map.getColumnCount());
+		for (Road road : roadBuilder.getRoads()) {
+			paintStrategy.paintRoad(road, g);
+		}
+
+		Car car = manager.getCar();
 		paintStrategy.paint(car, g);
-		
+
 		Light Leftlight = manager.getLeftLight();
 		paintStrategy.paintLeftLight(g, Leftlight);
-		
+
 		Light Rightlight = manager.getRightLight();
 		paintStrategy.paintRightLight(g, Rightlight);
 
