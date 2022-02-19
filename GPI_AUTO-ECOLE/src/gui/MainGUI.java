@@ -51,7 +51,6 @@ public class MainGUI extends JFrame implements Runnable {
 
 	private GameDisplay dashboard;
 	
-	@SuppressWarnings("unused")
 	private EndFrame end;
 
 	private Image imageCar;
