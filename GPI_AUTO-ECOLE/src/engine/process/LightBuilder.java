@@ -57,17 +57,30 @@ public class LightBuilder {
 		for (int lineIndex = 0; lineIndex < lineCount; lineIndex++) {
 			for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
 
-				// FEU ROUGE DROIT
+				// FEU HAUT
+				if (lineIndex == 0 && columnIndex == (columCount - 1) / 2) {
+					Light lightX = new Light(new Block(lineIndex, columnIndex), false);
+					lightsList.add(lightX);
+				}
+
+				// FEU GAUCHE
 				if (lineIndex == lineCount / 2 - 1 && columnIndex == diffPositionLight - 1) {
 					Light lightX = new Light(new Block(lineIndex, columnIndex), false);
 					lightsList.add(lightX);
 				}
 
-				// FEU ROUGE GAUCHE
+				// FEU DROIT
 				if (lineIndex == lineCount / 2 - 1 && columnIndex == columCount - (diffPositionLight)) {
 					Light lightX = new Light(new Block(lineIndex, columnIndex), false);
 					lightsList.add(lightX);
 				}
+
+				// FEU BAS
+				if (lineIndex == lineCount - 1 && columnIndex == (columCount - 1) / 2) {
+					Light lightX = new Light(new Block(lineIndex, columnIndex), false);
+					lightsList.add(lightX);
+				}
+
 			}
 		}
 

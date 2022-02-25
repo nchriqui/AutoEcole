@@ -4,14 +4,16 @@
 package config;
 
 /**
- * The chronometer class is composed of the three cyclic counters. We can count until 59 hours 59 minutes and 59
- * seconds.
+ * The chronometer class is composed of the three cyclic counters. We can count
+ * until 59 hours 59 minutes and 59 seconds.
+ * 
  * @author afatc
  *
  */
 public class Chronometer {
-	private CyclicCounter minute = new CyclicCounter(0, 4, 0);
-	private CyclicCounter second = new CyclicCounter(0, 59, 0);
+	private CyclicCounter minute = new CyclicCounter(0, GameConfiguration.GAME_MINUTE_DURATION, 0);
+	private CyclicCounter second = new CyclicCounter(0, GameConfiguration.GAME_SECONDE_DURATION, 0);
+	private boolean run = true;
 
 	public void increment() {
 		second.increment();
@@ -36,6 +38,14 @@ public class Chronometer {
 		return second;
 	}
 
+	public boolean isRun() {
+		return run;
+	}
+
+	public void setRun(boolean run) {
+		this.run = run;
+	}
+
 	public String toString() {
 		return "" + minute.toString() + ":" + second.toString();
 	}
@@ -51,7 +61,7 @@ public class Chronometer {
 	}
 
 	public void init() {
-		minute.setValue(0);
-		second.setValue(0);
+		minute.setValue(GameConfiguration.GAME_MINUTE_DURATION);
+		second.setValue(GameConfiguration.GAME_SECONDE_DURATION);
 	}
 }

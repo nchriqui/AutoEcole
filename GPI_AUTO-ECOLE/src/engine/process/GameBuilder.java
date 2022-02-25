@@ -24,21 +24,19 @@ public class GameBuilder {
 	}
 
 	public static void intializeCar(Map map, MobileElementManager manager) {
-		Block block = map.getBlock(GameConfiguration.LINE_COUNT - 2, (GameConfiguration.COLUMN_COUNT - 1) / 2);
+		Block block = map.getBlock(GameConfiguration.LINE_COUNT - 3, (GameConfiguration.COLUMN_COUNT - 1) / 2);
 		Car car = new Car(block);
 		manager.setCar(car);
 	}
 
 	public static void initializeLight(Map map, MobileElementManager manager) {
 
-		LightBuilder lightbuilder = new LightBuilder(map.getLineCount(), map.getColumnCount());
-		;
+		LightBuilder lightBuilder = new LightBuilder(map.getLineCount(), map.getColumnCount());
 
-		Light LeftLight = lightbuilder.getLightsList().get(0);
-		manager.setLeftLight(LeftLight);
-
-		Light rightLight = lightbuilder.getLightsList().get(1);
-		manager.setRightLight(rightLight);
+		for (int i = 0; i < lightBuilder.getLightsList().size(); i++) {
+			Light lightX = lightBuilder.getLightsList().get(i);
+			manager.setLight(lightX);
+		}
 	}
 
 }

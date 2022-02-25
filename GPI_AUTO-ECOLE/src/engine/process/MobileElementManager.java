@@ -1,5 +1,9 @@
 package engine.process;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import engine.fixed.Road;
 import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Car;
@@ -14,8 +18,7 @@ public class MobileElementManager {
 	private boolean lastMoveRight = false;
 	private boolean lastMoveLeft = false;
 
-	private Light leftLight;
-	private Light rightLight;
+	private Light light;
 
 	public MobileElementManager(Map map) {
 		this.map = map;
@@ -61,74 +64,84 @@ public class MobileElementManager {
 		this.lastMoveLeft = lastMoveLeft;
 	}
 
-	public Light getLeftLight() {
-		return leftLight;
+	public Light getLight() {
+		return light;
 	}
 
-	public void setLeftLight(Light leftLight) {
-		this.leftLight = leftLight;
-	}
-
-	public Light getRightLight() {
-		return rightLight;
-	}
-
-	public void setRightLight(Light rightLight) {
-		this.rightLight = rightLight;
+	public void setLight(Light light) {
+		this.light = light;
 	}
 
 	public void moveLeftCar() {
 		Block position = car.getPosition();
+		Block newPosition = map.getBlock(position.getLine(), position.getColumn() - 1);
+
+		List<Road> RoadsList = new ArrayList<Road>();
+		RoadBuilder roadbuilder = new RoadBuilder(map.getLineCount(), map.getColumnCount());
+		RoadsList = roadbuilder.getRoads();
+
+		boolean verif = CheckMove(RoadsList, newPosition);
+
 		// DEPLACEMENT ENTRE LES MURS DU CIRCUIT
-		if ((lastMoveUp || lastMoveDown || lastMoveLeft)
-				&& ((position.getLine() == 1 || position.getLine() == 2 || position.getLine() == 9
-						|| position.getLine() == 10) && (position.getColumn() > 1 && position.getColumn() <= 22))
-				|| ((position.getLine() >= 1 && position.getLine() <= 10)
-						&& (position.getColumn() == 2 || position.getColumn() == 23))) {
-			Block newPosition = map.getBlock(position.getLine(), position.getColumn() - 1);
+		if ((lastMoveUp || lastMoveDown || lastMoveLeft) && verif) {
 			car.setPosition(newPosition);
 		}
 	}
 
 	public void moveRightCar() {
 		Block position = car.getPosition();
+		Block newPosition = map.getBlock(position.getLine(), position.getColumn() + 1);
+
+		List<Road> RoadsList = new ArrayList<Road>();
+		RoadBuilder roadbuilder = new RoadBuilder(map.getLineCount(), map.getColumnCount());
+		RoadsList = roadbuilder.getRoads();
+
+		boolean verif = CheckMove(RoadsList, newPosition);
+
 		// DEPLACEMENT ENTRE LES MURS DU CIRCUIT
-		if ((lastMoveUp || lastMoveDown || lastMoveRight)
-				&& ((position.getLine() == 1 || position.getLine() == 2 || position.getLine() == 9
-						|| position.getLine() == 10) && (position.getColumn() >= 1 && position.getColumn() <= 21))
-				|| ((position.getLine() >= 1 && position.getLine() <= 10)
-						&& (position.getColumn() == 1 || position.getColumn() == 22))) {
-			Block newPosition = map.getBlock(position.getLine(), position.getColumn() + 1);
+		if ((lastMoveUp || lastMoveDown || lastMoveRight) && verif) {
 			car.setPosition(newPosition);
 		}
 	}
 
 	public void moveDownCar() {
 		Block position = car.getPosition();
+		Block newPosition = map.getBlock(position.getLine() + 1, position.getColumn());
+
+		List<Road> RoadsList = new ArrayList<Road>();
+		RoadBuilder roadbuilder = new RoadBuilder(map.getLineCount(), map.getColumnCount());
+		RoadsList = roadbuilder.getRoads();
+
+		boolean verif = CheckMove(RoadsList, newPosition);
 		// DEPLACEMENT ENTRE LES MURS DU CIRCUIT
-		if ((lastMoveRight || lastMoveLeft || lastMoveDown)
-				&& ((position.getLine() == 1 || position.getLine() == 9)
-						&& (position.getColumn() >= 1 && position.getColumn() <= 23))
-				|| ((position.getLine() >= 1 && position.getLine() <= 9)
-						&& ((position.getColumn() >= 1 && position.getColumn() <= 2)
-								|| (position.getColumn() >= 22 && position.getColumn() <= 23)))) {
-			Block newPosition = map.getBlock(position.getLine() + 1, position.getColumn());
+		if ((lastMoveRight || lastMoveLeft || lastMoveDown) && verif) {
 			car.setPosition(newPosition);
 		}
 	}
 
 	public void moveUpCar() {
 		Block position = car.getPosition();
+		Block newPosition = map.getBlock(position.getLine() - 1, position.getColumn());
+		List<Road> RoadsList = new ArrayList<Road>();
+		RoadBuilder roadbuilder = new RoadBuilder(map.getLineCount(), map.getColumnCount());
+		RoadsList = roadbuilder.getRoads();
+
+		boolean verif = CheckMove(RoadsList, newPosition);
 		// DEPLACEMENT ENTRE LES MURS DU CIRCUIT
-		if ((lastMoveRight || lastMoveLeft || lastMoveUp)
-				&& ((position.getLine() == 2 || position.getLine() == 10)
-						&& (position.getColumn() >= 1 && position.getColumn() <= 22))
-				|| ((position.getLine() >= 2 && position.getLine() <= 10)
-						&& ((position.getColumn() >= 1 && position.getColumn() <= 2)
-								|| (position.getColumn() >= 22 && position.getColumn() <= 23)))) {
-			Block newPosition = map.getBlock(position.getLine() - 1, position.getColumn());
+		if ((lastMoveRight || lastMoveLeft || lastMoveUp) && verif) {
 			car.setPosition(newPosition);
 		}
+	}
+
+	// Check if the move is possible
+	public boolean CheckMove(List<Road> RoadsList, Block block) {
+		boolean verif = false;
+		for (Road r : RoadsList) {
+			if (r.getPosition().compareBlock(block)) {
+				verif = true;
+			}
+		}
+		return verif;
 	}
 
 }

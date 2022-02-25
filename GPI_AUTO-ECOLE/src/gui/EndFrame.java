@@ -60,7 +60,7 @@ public class EndFrame extends JFrame {
 		
 		endbuttonPanel = new JPanel();
 		endbuttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		endbuttonPanel.add(menuButton);
+		//endbuttonPanel.add(menuButton);
 		endbuttonPanel.add(exitButton);
 		
 		contentPaneEnd.add(endbuttonPanel,BorderLayout.SOUTH);
@@ -72,14 +72,15 @@ public class EndFrame extends JFrame {
 		setVisible(true);
 		this.setSize(preferredSize);
 		setResizable(true);
+		setLocationRelativeTo(null);
 
 		if(end == 0) {
-			valider = "PERMIS ECHOUE , vous avez fait trop d'erreurs\n";
+			valider = "PERMIS ECHOUE ,vous avez fait plus de 5 erreurs. \n";
 			valider +="Veuillez réessayer !\n";
 			affichage.setText(valider);
 		}
 		else if (end ==1) {
-			valider = "Le temps est écoulé ....\n";
+			valider = "Le temps est écoulé, vous avez tenu jusqu'au bout. \n";
 			valider += "PERMIS VALIDE \n";
 			valider += "TOUTES MES FELICITATIONS\n";
 			affichage.setText(valider);
