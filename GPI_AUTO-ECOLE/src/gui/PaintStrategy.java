@@ -24,8 +24,13 @@ public class PaintStrategy extends JPanel {
 	private Image imageLeft;
 	private Image imageDown;
 
+	private Image imagePedestanVertical;
+	private Image imagePedestanHorizontal;
+	private Image imageStop;
+	private Image imageProhibitedDir;
+
 	private boolean lightRed = true;
-	private boolean lightYellow = false;
+	private boolean lightOrange = false;
 	private boolean lightGreen = false;
 
 	public PaintStrategy() {
@@ -38,6 +43,10 @@ public class PaintStrategy extends JPanel {
 		imageRight = GameUtility.readImage("src/images/mycarr3.png");
 		imageLeft = GameUtility.readImage("src/images/mycarr2.png");
 		imageDown = GameUtility.readImage("src/images/mycarr4.png");
+		imagePedestanVertical = GameUtility.readImage("src/images/passage_pieton-Vertical.png");
+		imagePedestanHorizontal = GameUtility.readImage("src/images/passage_pieton-Horizontal.png");
+		imageStop = GameUtility.readImage("src/images/stop.png");
+		imageProhibitedDir = GameUtility.readImage("src/images/sens_interdit.png");
 
 	}
 
@@ -70,12 +79,12 @@ public class PaintStrategy extends JPanel {
 		this.lightRed = lightRed;
 	}
 
-	public boolean isLightYellow() {
-		return lightYellow;
+	public boolean isLightOrange() {
+		return lightOrange;
 	}
 
-	public void setLightYellow(boolean lightYollow) {
-		this.lightYellow = lightYollow;
+	public void setLightOrange(boolean lightYollow) {
+		this.lightOrange = lightYollow;
 	}
 
 	public boolean isLightGreen() {
@@ -87,7 +96,7 @@ public class PaintStrategy extends JPanel {
 	}
 
 	// DESSIN DE LA CARTE DE JEU (DASHBOARD)
-	public void paint(Map map, Graphics graphics) {
+	public void paint(Map map, Graphics g) {
 		int blockSize = GameConfiguration.BLOCK_SIZE;
 		Block[][] blocks = map.getBlocks();
 
@@ -97,15 +106,15 @@ public class PaintStrategy extends JPanel {
 				Block block = blocks[lineIndex][columnIndex];
 
 				// DESSIN DU FOND DE LA CARTE
-				graphics.setColor(Color.decode("#353535"));
-				graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
+				g.setColor(Color.decode("#353535"));
+				g.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
 
 			}
 		}
 	}
 
 	// DESSIN D'UN BLOCK DE LA ROUTE
-	public void paintRoad(Road road, Graphics graphics) {
+	public void paintRoad(Road road, Graphics g) {
 
 		Block position = road.getPosition();
 
@@ -114,148 +123,37 @@ public class PaintStrategy extends JPanel {
 		int y = position.getLine();
 		int x = position.getColumn();
 
-		graphics.setColor(Color.GRAY);
-		graphics.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
+		g.setColor(Color.GRAY);
+		g.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
 
 	}
 
-	// DESSIN DES LIGNES DE LA ROUTE
-	public void paintRoadLine(Road road, Graphics graphics) {
-		Color color = Color.YELLOW;
-		Block position = road.getPosition();
+	// PedestianHorizontalCrossing
+	public void paintHorizontalPedestian(Block block, Graphics g) {
+
+		int positionPedestianLine = block.getLine();
+		int positionPedestianColumn = block.getColumn();
 
 		int blockSize = GameConfiguration.BLOCK_SIZE;
 
-		int y = position.getLine();
-		int x = position.getColumn();
-
-		// LINE FOR HORIZONTAL ROAD
-		if (x % 2 == 0
-				&& !(x == GameConfiguration.DIFF_ROAD_POSITION - 1 || x == GameConfiguration.DIFF_ROAD_POSITION
-						|| x == (GameConfiguration.COLUMN_COUNT - GameConfiguration.DIFF_ROAD_POSITION) - 1
-						|| x == GameConfiguration.COLUMN_COUNT - GameConfiguration.DIFF_ROAD_POSITION)
-				&& !(y == GameConfiguration.DIFF_ROAD_POSITION
-						|| y == GameConfiguration.LINE_COUNT - GameConfiguration.DIFF_ROAD_POSITION)) {
-			graphics.setColor(color);
-			graphics.fillRect(x * blockSize, y * blockSize + blockSize, blockSize, blockSize / 10);
-
-		}
-
-		// LINE FOR VERTICAL ROAD
-		if (y % 2 == 0
-				&& !(y == GameConfiguration.DIFF_ROAD_POSITION - 1 || y == GameConfiguration.DIFF_ROAD_POSITION
-						|| y == (GameConfiguration.LINE_COUNT - GameConfiguration.DIFF_ROAD_POSITION) - 1
-						|| y == (GameConfiguration.LINE_COUNT - GameConfiguration.DIFF_ROAD_POSITION))
-				&& !(x == GameConfiguration.DIFF_ROAD_POSITION
-						|| x == GameConfiguration.COLUMN_COUNT - GameConfiguration.DIFF_ROAD_POSITION)) {
-			graphics.setColor(color);
-			graphics.fillRect(x * blockSize + blockSize, y * blockSize, blockSize / 10, blockSize);
-
-		}
-
-		// LINE FOR CORNER ROAD LEFT-UP
-		if (x == GameConfiguration.DIFF_ROAD_POSITION && y == GameConfiguration.DIFF_ROAD_POSITION) {
-			graphics.setColor(color);
-			// Horizontal
-			graphics.fillRect(x * blockSize, y * blockSize, blockSize / 2, blockSize / 10);
-
-			// Vertical
-			graphics.fillRect(x * blockSize, y * blockSize, blockSize / 10, blockSize / 2);
-		}
-
-		// LINE FOR CORNER ROAD RIGHT-UP
-		if (x == GameConfiguration.COLUMN_COUNT - GameConfiguration.DIFF_ROAD_POSITION
-				&& y == GameConfiguration.DIFF_ROAD_POSITION) {
-			graphics.setColor(color);
-			// Vertical
-			graphics.fillRect(x * blockSize, y * blockSize, blockSize / 10, blockSize / 2);
-
-			// Horizontal
-			graphics.fillRect(x * blockSize - blockSize / 2, y * blockSize, blockSize / 2, blockSize / 10);
-
-		}
-
-		// LINE FOR CORNER ROAD RIGHT-DOWN
-		if (x == GameConfiguration.COLUMN_COUNT - GameConfiguration.DIFF_ROAD_POSITION
-				&& y == GameConfiguration.LINE_COUNT - GameConfiguration.DIFF_ROAD_POSITION) {
-			graphics.setColor(color);
-			// Vertical
-			graphics.fillRect(x * blockSize, y * blockSize - (blockSize / 2), blockSize / 10,
-					blockSize / 2 + blockSize / 10);
-
-			// Horizontal
-			graphics.fillRect(x * blockSize - blockSize / 2, y * blockSize, blockSize / 2, blockSize / 10);
-
-		}
-
-		// LINE FOR CORNER ROAD LEFT-DOWM
-		if (x == GameConfiguration.DIFF_ROAD_POSITION
-				&& y == GameConfiguration.LINE_COUNT - GameConfiguration.DIFF_ROAD_POSITION) {
-			graphics.setColor(color);
-			// Vertical
-			graphics.fillRect(x * blockSize, y * blockSize - (blockSize / 2), blockSize / 10, blockSize / 2);
-
-			// Horizontal
-			graphics.fillRect(x * blockSize, y * blockSize, blockSize / 2, blockSize / 10);
-
-		}
-
+		g.drawImage(imagePedestanHorizontal, positionPedestianColumn * blockSize, positionPedestianLine * blockSize,
+				blockSize, blockSize, null);
 	}
 
-	// PedestianCrossing
-	public void paintPedestianCrossing(Light light, int direction, Graphics graphics) {
+	// PedestrianVerticalCrossing
+	public void paintVerticalPedestrian(Block block, Graphics g) {
+
+		int positionPedestianLine = block.getLine();
+		int positionPedestianColumn = block.getColumn();
 
 		int blockSize = GameConfiguration.BLOCK_SIZE;
-		Block position = light.getPosition();
-		int y;
-		int x;
 
-		switch (direction) {
-		case 0:// LIGHT UP
-			y = position.getLine() + 1;
-			x = position.getColumn();
-			graphics.setColor(Color.white);
-			for (int i = 0; i < blockSize; i = i + (blockSize / 5)) {
-				graphics.fillRect(x * blockSize, y * blockSize + i, blockSize, blockSize / 10);
-			}
-			break;
-		case 1: // LIGHT LEFT
-			y = position.getLine();
-			x = position.getColumn() - 1;
-			graphics.setColor(Color.white);
-			for (int i = 5; i < blockSize; i = i + (blockSize / 5)) {
-				graphics.fillRect(x * blockSize + i, y * blockSize, blockSize / 10, blockSize);
-
-			}
-			break;
-		case 2:// LIGHT RIGHT
-
-			y = position.getLine();
-			x = position.getColumn() + 1;
-
-			graphics.setColor(Color.white);
-			for (int i = 0; i < blockSize; i = i + (blockSize / 5)) {
-				graphics.fillRect(x * blockSize + i, y * blockSize, blockSize / 10, blockSize);
-			}
-			break;
-		case 3:// LIGHT BOTTOM
-
-			y = position.getLine() - 1;
-			x = position.getColumn();
-			graphics.setColor(Color.white);
-			for (int i = 5; i < blockSize - (blockSize / 10); i = i + (blockSize / 5)) {
-				graphics.fillRect(x * blockSize, y * blockSize + i, blockSize, blockSize / 10);
-
-			}
-
-			break;
-		default:
-			break;
-		}
+		g.drawImage(imagePedestanVertical, positionPedestianColumn * blockSize, positionPedestianLine * blockSize,
+				blockSize, blockSize, null);
 	}
 
 	// DESSIN DE LA VOITURE (IMAGE)
-	public void paint(Car car, Graphics graphics) {
+	public void paint(Car car, Graphics g) {
 
 		Block position = car.getPosition();
 
@@ -264,23 +162,8 @@ public class PaintStrategy extends JPanel {
 		int y = position.getLine();
 		int x = position.getColumn();
 
-		graphics.drawImage(image, x * blockSize, y * blockSize, null);
+		g.drawImage(image, x * blockSize, y * blockSize, blockSize, blockSize, null);
 
-	}
-
-	public void paint(Light light, Graphics g) {
-
-		Block position = light.getPosition();
-		// System.out.println("light"+ position);
-		int blockSize = GameConfiguration.BLOCK_SIZE;
-		int y = position.getLine();
-		int x = position.getColumn();
-
-		g.setColor(Color.BLACK);
-		g.fillOval(x * blockSize, y * blockSize, blockSize, blockSize);
-		g.setColor(Color.GRAY);
-
-		g.fillOval(x * blockSize + 2, y * blockSize + 2, blockSize - 4, blockSize - 4);
 	}
 
 	public void paintRedLight(Light light, Graphics g) {
@@ -290,23 +173,36 @@ public class PaintStrategy extends JPanel {
 
 			int y = position.getLine();
 			int x = position.getColumn();
-			g.setColor(Color.red);
 
+			g.setColor(Color.BLACK);
+			g.fillOval(x * blockSize, y * blockSize, blockSize, blockSize);
+
+			g.setColor(Color.GRAY);
+			g.fillOval(x * blockSize + 2, y * blockSize + 2, blockSize - 4, blockSize - 4);
+
+			g.setColor(Color.red);
 			g.fillOval(x * blockSize + 3, y * blockSize + 3, blockSize - 6, blockSize - 6);
 		}
 	}
 
-	public void paintYollowLight(Light light, Graphics g) {
+	public void paintOrangeLight(Light light, Graphics g) {
 
-		if (lightYellow) {
+		if (lightOrange) {
 			// boolean regarde le main dans la methode run
-			g.setColor(Color.yellow);
+
 			Block position = light.getPosition();
 
 			int y = position.getLine();
 			int x = position.getColumn();
 			int blockSize = GameConfiguration.BLOCK_SIZE;
 
+			g.setColor(Color.BLACK);
+			g.fillOval(x * blockSize, y * blockSize, blockSize, blockSize);
+
+			g.setColor(Color.GRAY);
+			g.fillOval(x * blockSize + 2, y * blockSize + 2, blockSize - 4, blockSize - 4);
+
+			g.setColor(Color.orange);
 			g.fillOval(x * blockSize + 3, y * blockSize + 3, blockSize - 6, blockSize - 6);
 		}
 	}
@@ -319,10 +215,36 @@ public class PaintStrategy extends JPanel {
 			int y = position.getLine();
 			int x = position.getColumn();
 			int blockSize = GameConfiguration.BLOCK_SIZE;
-			g.setColor(Color.green);
 
+			g.setColor(Color.BLACK);
+			g.fillOval(x * blockSize, y * blockSize, blockSize, blockSize);
+
+			g.setColor(Color.GRAY);
+			g.fillOval(x * blockSize + 2, y * blockSize + 2, blockSize - 4, blockSize - 4);
+
+			g.setColor(Color.green);
 			g.fillOval(x * blockSize + 3, y * blockSize + 3, blockSize - 6, blockSize - 6);
 		}
+	}
+
+	public void paintStop(Block stopX, Graphics g) {
+		int positionStopLine = stopX.getLine();
+		int positionStopColumn = stopX.getColumn();
+
+		int blockSize = GameConfiguration.BLOCK_SIZE;
+
+		g.drawImage(imageStop, positionStopColumn * blockSize, positionStopLine * blockSize, blockSize, blockSize,
+				null);
+	}
+
+	public void paintProhibitedDir(Block prohibitedDir, Graphics g) {
+		int prohibitedDirsLine = prohibitedDir.getLine();
+		int prohibitedDirsColumn = prohibitedDir.getColumn();
+
+		int blockSize = GameConfiguration.BLOCK_SIZE;
+
+		g.drawImage(imageProhibitedDir, prohibitedDirsColumn * blockSize, prohibitedDirsLine * blockSize, blockSize,
+				blockSize, null);
 	}
 
 }

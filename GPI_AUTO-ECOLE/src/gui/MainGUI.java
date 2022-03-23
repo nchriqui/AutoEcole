@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import config.Chronometer;
+import chrono.Chronometer;
 import config.GameConfiguration;
 import engine.map.Map;
 import engine.process.CarMoveUtility;
@@ -59,12 +59,14 @@ public class MainGUI extends JFrame implements Runnable {
 	}
 
 	private void init() {
+		chronometer.init();
+		GameConfiguration.SCORE = 40;
+		GameConfiguration.GAME_RUN = true;
 
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
 		control.setLayout(new GridLayout(4, 1));
-		// scorePanel.setLayout(new FlowLayout());
 
 		timeLabel.setFont(font);
 		control.add(timeLabel);
@@ -118,31 +120,14 @@ public class MainGUI extends JFrame implements Runnable {
 					} else {
 						chronometer.decrement();
 						timeValue.setText(chronometer.toString() + "");
-						if (chronometer.getMinute().getValue() == 0 && chronometer.getSecond().getValue() == 1) {
+						if (chronometer.endChrono()) {
 							chronometer.setRun(false);
 						}
 					}
 
 				}
 
-				if (turnNumber % 5000 == 0) {// <=> Thread.sleep(5000);
-					paintStrategy.setLightRed(false);
-					paintStrategy.setLightGreen(true);
-					paintStrategy.setLightYellow(false);
-					dashboard.setPaintStrategy(paintStrategy);
-				}
-				if (turnNumber % 4000 == 0) {// <=> Thread.sleep(3000);
-					paintStrategy.setLightRed(false);
-					paintStrategy.setLightGreen(false);
-					paintStrategy.setLightYellow(true);
-					dashboard.setPaintStrategy(paintStrategy);
-				}
-				if (turnNumber % 3700 == 0) {// <=> Thread.sleep(2500);
-					paintStrategy.setLightRed(true);
-					paintStrategy.setLightGreen(false);
-					paintStrategy.setLightYellow(false);
-					dashboard.setPaintStrategy(paintStrategy);
-				}
+				dashboard.nextRound(turnNumber);
 
 				turnNumber++;
 
@@ -162,7 +147,7 @@ public class MainGUI extends JFrame implements Runnable {
 			case 37: // FLECHE GAUCHE
 				// si le dernier deplacement était en haut , en bas ou à gauche
 				if (carMoveUtility.checkMoveLeft(manager)) {
-					System.out.println("DEPLACEMENT IMPOSSIBLE, SCORE-1");
+					System.out.println("DEPLACEMENT A GAUCHE");
 					manager.moveLeftCar();
 
 					imageCar = paintStrategy.getImageLeft();

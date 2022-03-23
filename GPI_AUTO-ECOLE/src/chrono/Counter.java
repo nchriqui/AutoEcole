@@ -1,10 +1,11 @@
 /**
  * 
  */
-package config;
+package chrono;
 
 /**
- * This is the basic counter implementation. The counter has a integer value that can be incremented or decremented. 
+ * This is the basic counter implementation. The counter has a integer value
+ * that can be incremented or decremented.
  * 
  * We can only increment or decrement the value by 1 each time.
  * 

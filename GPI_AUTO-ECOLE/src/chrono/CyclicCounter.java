@@ -1,17 +1,18 @@
 /**
  * 
  */
-package config;
+package chrono;
 
 /**
  * The cyclic counter is a bounded counter with cyclic value change.
+ * 
  * @author afatc
  *
  */
 public class CyclicCounter extends BoundedCounter {
 
 	public CyclicCounter(int value, int max, int min) {
-		super(value, max, min); 
+		super(value, max, min);
 	}
 
 	@Override

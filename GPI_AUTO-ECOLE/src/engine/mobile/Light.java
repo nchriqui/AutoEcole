@@ -4,7 +4,7 @@ import engine.map.Block;
 
 public class Light extends MobileElement {
 
-	private Boolean go;
+	//private Boolean go;
 
 	/**
 	 * @param position
@@ -12,15 +12,15 @@ public class Light extends MobileElement {
 	 */
 	public Light(Block position, Boolean go) {
 		super(position);
-		this.go = go;
+//		this.go = go;
 	}
 
-	public Boolean getGo() {
-		return go;
-	}
+//	public Boolean getGo() {
+//		return go;
+//	}
 
-	public void setGo(Boolean go) {
-		this.go = go;
-	}
+//	public void setGo(Boolean go) {
+//		this.go = go;
+//	}
 
 }

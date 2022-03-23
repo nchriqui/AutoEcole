@@ -1,7 +1,7 @@
 /**
  * 
  */
-package config;
+package chrono;
 
 /**
  * The bounded counter has a min value and a max value.

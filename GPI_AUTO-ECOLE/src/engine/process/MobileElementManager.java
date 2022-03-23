@@ -3,11 +3,11 @@ package engine.process;
 import java.util.ArrayList;
 import java.util.List;
 
+import config.GameConfiguration;
 import engine.fixed.Road;
 import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Car;
-import engine.mobile.Light;
 
 public class MobileElementManager {
 	private Map map;
@@ -17,8 +17,6 @@ public class MobileElementManager {
 	private boolean lastMoveDown = false;
 	private boolean lastMoveRight = false;
 	private boolean lastMoveLeft = false;
-
-	private Light light;
 
 	public MobileElementManager(Map map) {
 		this.map = map;
@@ -64,26 +62,19 @@ public class MobileElementManager {
 		this.lastMoveLeft = lastMoveLeft;
 	}
 
-	public Light getLight() {
-		return light;
-	}
-
-	public void setLight(Light light) {
-		this.light = light;
-	}
-
 	public void moveLeftCar() {
 		Block position = car.getPosition();
 		Block newPosition = map.getBlock(position.getLine(), position.getColumn() - 1);
 
 		List<Road> RoadsList = new ArrayList<Road>();
-		RoadBuilder roadbuilder = new RoadBuilder(map.getLineCount(), map.getColumnCount());
-		RoadsList = roadbuilder.getRoads();
+		MapBuilder mapBuilder = new MapBuilder(GameConfiguration.LINE_COUNT, GameConfiguration.COLUMN_COUNT);
+		RoadsList = mapBuilder.getRoads();
 
 		boolean verif = CheckMove(RoadsList, newPosition);
 
 		// DEPLACEMENT ENTRE LES MURS DU CIRCUIT
 		if ((lastMoveUp || lastMoveDown || lastMoveLeft) && verif) {
+			car.setLastPosition(position);
 			car.setPosition(newPosition);
 		}
 	}
@@ -93,13 +84,14 @@ public class MobileElementManager {
 		Block newPosition = map.getBlock(position.getLine(), position.getColumn() + 1);
 
 		List<Road> RoadsList = new ArrayList<Road>();
-		RoadBuilder roadbuilder = new RoadBuilder(map.getLineCount(), map.getColumnCount());
-		RoadsList = roadbuilder.getRoads();
+		MapBuilder mapBuilder = new MapBuilder(GameConfiguration.LINE_COUNT, GameConfiguration.COLUMN_COUNT);
+		RoadsList = mapBuilder.getRoads();
 
 		boolean verif = CheckMove(RoadsList, newPosition);
 
 		// DEPLACEMENT ENTRE LES MURS DU CIRCUIT
 		if ((lastMoveUp || lastMoveDown || lastMoveRight) && verif) {
+			car.setLastPosition(position);
 			car.setPosition(newPosition);
 		}
 	}
@@ -109,12 +101,13 @@ public class MobileElementManager {
 		Block newPosition = map.getBlock(position.getLine() + 1, position.getColumn());
 
 		List<Road> RoadsList = new ArrayList<Road>();
-		RoadBuilder roadbuilder = new RoadBuilder(map.getLineCount(), map.getColumnCount());
-		RoadsList = roadbuilder.getRoads();
+		MapBuilder mapBuilder = new MapBuilder(GameConfiguration.LINE_COUNT, GameConfiguration.COLUMN_COUNT);
+		RoadsList = mapBuilder.getRoads();
 
 		boolean verif = CheckMove(RoadsList, newPosition);
 		// DEPLACEMENT ENTRE LES MURS DU CIRCUIT
 		if ((lastMoveRight || lastMoveLeft || lastMoveDown) && verif) {
+			car.setLastPosition(position);
 			car.setPosition(newPosition);
 		}
 	}
@@ -122,13 +115,15 @@ public class MobileElementManager {
 	public void moveUpCar() {
 		Block position = car.getPosition();
 		Block newPosition = map.getBlock(position.getLine() - 1, position.getColumn());
+
 		List<Road> RoadsList = new ArrayList<Road>();
-		RoadBuilder roadbuilder = new RoadBuilder(map.getLineCount(), map.getColumnCount());
-		RoadsList = roadbuilder.getRoads();
+		MapBuilder mapBuilder = new MapBuilder(GameConfiguration.LINE_COUNT, GameConfiguration.COLUMN_COUNT);
+		RoadsList = mapBuilder.getRoads();
 
 		boolean verif = CheckMove(RoadsList, newPosition);
 		// DEPLACEMENT ENTRE LES MURS DU CIRCUIT
 		if ((lastMoveRight || lastMoveLeft || lastMoveUp) && verif) {
+			car.setLastPosition(position);
 			car.setPosition(newPosition);
 		}
 	}
@@ -142,6 +137,34 @@ public class MobileElementManager {
 			}
 		}
 		return verif;
+	}
+
+	/*
+	 * Check the move, when the car pass on a pedestrian , to decrement the score
+	 * just one time
+	 */
+	public void pedestrianMove(Car car, int direction) {
+		Block carPosition = car.getPosition();
+		switch (direction) {
+		case 1: { // gauche
+			car.setPosition(new Block(carPosition.getLine(), carPosition.getColumn() - 1));
+			break;
+		}
+		case 2: { // haut
+			car.setPosition(new Block(carPosition.getLine() - 1, carPosition.getColumn()));
+			break;
+		}
+		case 3: { // droite
+			car.setPosition(new Block(carPosition.getLine(), carPosition.getColumn() + 1));
+			break;
+		}
+		case 4: { // bas
+			car.setPosition(new Block(carPosition.getLine() + 1, carPosition.getColumn()));
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + direction);
+		}
 	}
 
 }

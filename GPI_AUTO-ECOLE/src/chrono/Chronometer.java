@@ -1,7 +1,9 @@
 /**
  * 
  */
-package config;
+package chrono;
+
+import config.GameConfiguration;
 
 /**
  * The chronometer class is composed of the three cyclic counters. We can count
@@ -14,21 +16,6 @@ public class Chronometer {
 	private CyclicCounter minute = new CyclicCounter(0, GameConfiguration.GAME_MINUTE_DURATION, 0);
 	private CyclicCounter second = new CyclicCounter(0, GameConfiguration.GAME_SECONDE_DURATION, 0);
 	private boolean run = true;
-
-	public void increment() {
-		second.increment();
-		if (second.getValue() == 0) {
-			minute.increment();
-		}
-
-	}
-
-	public void decrement() {
-		second.decrement();
-		if (second.getValue() == 59) {
-			minute.decrement();
-		}
-	}
 
 	public CyclicCounter getMinute() {
 		return minute;
@@ -46,8 +33,32 @@ public class Chronometer {
 		this.run = run;
 	}
 
-	public String toString() {
-		return "" + minute.toString() + ":" + second.toString();
+	public void init() {
+		minute.setValue(GameConfiguration.GAME_MINUTE_DURATION);
+		second.setValue(GameConfiguration.GAME_SECONDE_DURATION);
+	}
+
+	public void increment() {
+		second.increment();
+		if (second.getValue() == 0) {
+			minute.increment();
+		}
+
+	}
+
+	public void decrement() {
+		second.decrement();
+		if (second.getValue() == 59) {
+			minute.decrement();
+		}
+	}
+	
+	public boolean endChrono() {
+		boolean result = false;
+		if (this.getMinute().getValue() == 0 && this.getSecond().getValue() == 1) {
+			result = true;
+		}
+		return result;
 	}
 
 	public static String transform(int value) {
@@ -60,8 +71,8 @@ public class Chronometer {
 		return result;
 	}
 
-	public void init() {
-		minute.setValue(GameConfiguration.GAME_MINUTE_DURATION);
-		second.setValue(GameConfiguration.GAME_SECONDE_DURATION);
+	public String toString() {
+		return "" + minute.toString() + ":" + second.toString();
 	}
+
 }
