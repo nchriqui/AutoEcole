@@ -1,14 +1,24 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dialog;
 import java.awt.Dimension;
-
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,209 +34,308 @@ import java.awt.Image;
 
 public class MainGUI extends JFrame implements Runnable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Map map;
+    private Map map;
 
-	private static Font font = new Font(Font.MONOSPACED, Font.BOLD, 20);
-	private final static Dimension preferredSize = new Dimension(GameConfiguration.WINDOW_WIDTH,
-			GameConfiguration.WINDOW_HEIGHT);
+    private static Font font = new Font(Font.MONOSPACED, Font.BOLD, 22);
+    private static Font fontPause = new Font(Font.MONOSPACED, Font.BOLD, 40);
+    private static Font buttonFont = new Font(Font.DIALOG, Font.BOLD, 28);
+    private final static Dimension preferredSize = new Dimension(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT);
 
-	private MobileElementManager manager;
+    private MobileElementManager manager;
 
-	private Chronometer chronometer = new Chronometer();
+    private Chronometer chronometer = new Chronometer();
 
-	private JLabel timeLabel = new JLabel("Temps restant:");
-	private JLabel timeValue = new JLabel("");
-	private JLabel scoreLabel = new JLabel("Score");
-	private JLabel scoreValue = new JLabel("");
+    private JLabel timeValue = new JLabel("");
+    private JLabel scoreLabel = new JLabel("Score");
+    private JLabel scoreValue = new JLabel("");
 
-	private JPanel control = new JPanel();
+    private JPanel scorePanel = new JPanel();
 
-	private PaintStrategy paintStrategy = new PaintStrategy();
+    private JPanel stopPanel = new JPanel();
 
-	private GameDisplay dashboard;
+    private JButton stopButton = new JButton();
 
-	private Image imageCar;
+    private JPanel control = new JPanel();
 
-	private CarMoveUtility carMoveUtility = new CarMoveUtility();
+    private PaintStrategy paintStrategy;
 
-	private int turnNumber = 0;
+    private GameDisplay dashboard;
 
-	public MainGUI(String title) {
-		super(title);
-		init();
-	}
+    private Image imageCar;
 
-	private void init() {
-		chronometer.init();
-		GameConfiguration.SCORE = 40;
-		GameConfiguration.GAME_RUN = true;
+    private CarMoveUtility carMoveUtility = new CarMoveUtility();
 
-		Container contentPane = getContentPane();
-		contentPane.setLayout(new BorderLayout());
+    private int turnNumber = 0;
 
-		control.setLayout(new GridLayout(4, 1));
+    private boolean stop = false;
 
-		timeLabel.setFont(font);
-		control.add(timeLabel);
-		timeValue.setFont(font);
-		control.add(timeValue);
+    public MainGUI(String title, PaintStrategy paintStrategy) {
+        super(title);
+        this.paintStrategy = paintStrategy;
+        init();
+    }
 
-		scoreLabel.setFont(font);
-		control.add(scoreLabel);
-		scoreValue.setFont(font);
-		control.add(scoreValue);
+    private void init() {
+        chronometer.init();
+        GameConfiguration.SCORE = 40;
+        GameConfiguration.GAME_RUN = true;
 
-		KeyControls keyControls = new KeyControls();
-		this.addKeyListener(keyControls);
+        Container contentPane = getContentPane();
+        contentPane.setLayout(new BorderLayout());
 
-		map = GameBuilder.buildMap();
-		manager = GameBuilder.buildInitMobile(map);
+        stopButton.setIcon(new ImageIcon("src/images/pause.png"));
+        stopButton.setFocusable(false);
+        stopButton.setOpaque(false);
+        stopButton.setContentAreaFilled(false);
+        stopButton.setBorderPainted(false);
 
-		dashboard = new GameDisplay(map, manager);
+        final JDialog modelDialog = createDialog(this);
+        stopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                stop = true;
+                modelDialog.setVisible(true);
+            }
+        });
 
-		dashboard.setPreferredSize(preferredSize);
-		contentPane.add(dashboard, BorderLayout.CENTER);
-		contentPane.add(control, BorderLayout.EAST);
+        control.setLayout(new GridLayout(4, 1));
 
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		pack();
-		setVisible(true);
-		setPreferredSize(preferredSize);
-		setResizable(false);
-		setLocationRelativeTo(null);
-	}
+        stopPanel.add(stopButton);
+        control.add(stopPanel);
+        timeValue.setFont(font);
+        control.add(timeValue);
 
-	@Override
-	public void run() {
-		while (GameConfiguration.GAME_RUN == true) {
-			try {
-				Thread.sleep(GameConfiguration.GAME_SPEED);
-				dashboard.repaint();
-				dashboard.checkLight(manager.getCar());
-				scoreValue.setText("" + GameConfiguration.SCORE);
-				if (GameConfiguration.SCORE < 35) {
-					GameConfiguration.GAME_RUN = false;
-					this.dispose();
-					new EndFrame(0);
-				}
+        scoreLabel.setFont(font);
+        scoreValue.setFont(font);
+        scorePanel.setLayout(new GridLayout(2, 1));
+        scorePanel.add(scoreLabel);
+        scorePanel.add(scoreValue);
 
-				if (turnNumber % 1000 == 0) {// <=> Thread.sleep(1000);
-					if (chronometer.isRun() == false) {
-						GameConfiguration.GAME_RUN = false;
-						this.dispose();
-						new EndFrame(1);
-					} else {
-						chronometer.decrement();
-						timeValue.setText(chronometer.toString() + "");
-						if (chronometer.endChrono()) {
-							chronometer.setRun(false);
-						}
-					}
+        control.add(scorePanel);
 
-				}
+        KeyControls keyControls = new KeyControls();
+        this.addKeyListener(keyControls);
 
-				dashboard.nextRound(turnNumber);
+        map = GameBuilder.buildMap();
+        manager = GameBuilder.buildInitMobile(map);
 
-				turnNumber++;
+        dashboard = new GameDisplay(map, manager, paintStrategy);
 
-			} catch (InterruptedException e) {
-				System.out.println(e.getMessage());
-			}
-		}
-	}
+        dashboard.setPreferredSize(preferredSize);
+        contentPane.add(dashboard, BorderLayout.CENTER);
+        contentPane.add(control, BorderLayout.EAST);
 
-	private class KeyControls implements KeyListener {
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        pack();
+        setVisible(true);
+        setPreferredSize(preferredSize);
+        setResizable(false);
+        setLocationRelativeTo(null);
+    }
 
-		@Override
-		public void keyPressed(KeyEvent event) {
-			int keyCode = event.getKeyCode();
+    private JDialog createDialog(final JFrame frame) {
+        final JDialog modelDialog = new JDialog(frame, "Pause", Dialog.ModalityType.DOCUMENT_MODAL);
+        modelDialog.setBounds(500, 250, 400, 300);
+        modelDialog.getContentPane().setBackground(Color.black);
+        // modelDialog.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        modelDialog.setUndecorated(true);
+        Container dialogContainer = modelDialog.getContentPane();
+        dialogContainer.setLayout(new BorderLayout());
+        JPanel pausePan = new JPanel();
+        pausePan.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JPanel panTitle = new JPanel();
+        JLabel pauseTitle = new JLabel("Jeu en pause");
+        pauseTitle.setFont(fontPause);
+        panTitle.add(pauseTitle);
+        pausePan.add(panTitle);
+        dialogContainer.add(pausePan, BorderLayout.NORTH);
+        JButton exitButton = new JButton("Quitter");
+        exitButton.setUI(new StyledButtonUI());
+        exitButton.setFont(buttonFont);
+        JButton continueButton = new JButton("Reprendre");
+        continueButton.setUI(new StyledButtonUI());
+        continueButton.setFont(buttonFont);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        buttonPanel.add(Box.createVerticalStrut(30));
+        buttonPanel.add(continueButton);
+        buttonPanel.add(Box.createVerticalStrut(30));
+        exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        buttonPanel.add(exitButton);
 
-			switch (keyCode) {
-			case 37: // FLECHE GAUCHE
-				// si le dernier deplacement était en haut , en bas ou à gauche
-				if (carMoveUtility.checkMoveLeft(manager)) {
-					System.out.println("DEPLACEMENT A GAUCHE");
-					manager.moveLeftCar();
+        continueButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                stop = false;
+                modelDialog.setVisible(false);
+            }
+        });
 
-					imageCar = paintStrategy.getImageLeft();
-					paintStrategy.setImage(imageCar);
-					dashboard.setPaintStrategy(paintStrategy);
+        exitButton.addActionListener(new ExitAction(this));
 
-					// Sauvegarde du dernier deplacement efffectue
-					carMoveUtility.saveLastMove(keyCode, manager);
-				} else {
-					System.out.println("DEPLACEMENT IMPOSSIBLE, SCORE-1");
-					GameConfiguration.SCORE--;
-				}
-				break;
-			case 38: // FLECHE DU HAUT
-				// si le dernier deplacement était a gauche , a droite ou en haut
-				if (carMoveUtility.checkMoveUp(manager)) {
-					System.out.println("DEPLACEMENT EN HAUT");
-					manager.moveUpCar();
+        dialogContainer.add(buttonPanel, BorderLayout.CENTER);
 
-					imageCar = paintStrategy.getImageUp();
-					paintStrategy.setImage(imageCar);
-					dashboard.setPaintStrategy(paintStrategy);
+        return modelDialog;
+    }
 
-					// Sauvegarde du dernier deplacement efffectue
-					carMoveUtility.saveLastMove(keyCode, manager);
-				} else {
-					System.out.println("DEPLACEMENT IMPOSSIBLE, SCORE-1");
-					GameConfiguration.SCORE--;
-				}
-				break;
+    private class ExitAction implements ActionListener {
+        // Window to be closed.
+        private JFrame window;
 
-			case 39: // FLECHE DROITE
-				// si le dernier deplacement était en haut , en bas ou a droite
-				if (carMoveUtility.checkMoveRight(manager)) {
-					System.out.println("DEPLACEMENT A DROITE");
-					manager.moveRightCar();
+        public ExitAction(JFrame window) {
+            this.window = window;
+        }
 
-					imageCar = paintStrategy.getImageRight();
-					paintStrategy.setImage(imageCar);
-					dashboard.setPaintStrategy(paintStrategy);
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            window.dispose();
+        }
 
-					// Sauvegarde du dernier deplacement efffectue
-					carMoveUtility.saveLastMove(keyCode, manager);
-				} else {
-					System.out.println("DEPLACEMENT IMPOSSIBLE, SCORE-1");
-					GameConfiguration.SCORE--;
-				}
-				break;
-			case 40: // DEPLACEMENT EN BAS
-				// si le dernier deplacement était a gauche , a droite ou en bas
-				if (carMoveUtility.checkMoveBottom(manager)) {
-					System.out.println("DEPLACEMENT EN BAS ");
-					manager.moveDownCar();
+    }
 
-					imageCar = paintStrategy.getImageDown();
-					paintStrategy.setImage(imageCar);
-					dashboard.setPaintStrategy(paintStrategy);
+    @Override
+    public void run() {
+        while (GameConfiguration.GAME_RUN == true) {
+            if (!stop) {
+                try {
+                    Thread.sleep(GameConfiguration.GAME_SPEED);
+                    dashboard.repaint();
+                    dashboard.checkLight(manager.getCar());
+                    scoreValue.setText("" + GameConfiguration.SCORE + "/40");
+                    if (GameConfiguration.SCORE < 35) {
+                        GameConfiguration.GAME_RUN = false;
+                        this.dispose();
+                        new EndFrame(0, paintStrategy);
+                    }
 
-					// Sauvegarde du dernier deplacement efffectue
-					carMoveUtility.saveLastMove(keyCode, manager);
-				} else {
-					System.out.println("DEPLACEMENT IMPOSSIBLE, SCORE-1");
-					GameConfiguration.SCORE--;
-				}
-				break;
-			default:
-				break;
-			}
-		}
+                    if (turnNumber % 1000 == 0) {// <=> Thread.sleep(1000);
+                        if (chronometer.isRun() == false) {
+                            GameConfiguration.GAME_RUN = false;
+                            this.dispose();
+                            new EndFrame(1, paintStrategy);
+                        } else {
+                            chronometer.decrement();
+                            timeValue.setText(chronometer.toString() + "");
+                            if (chronometer.endChrono()) {
+                                chronometer.setRun(false);
+                            }
+                        }
 
-		@Override
-		public void keyTyped(KeyEvent e) {
+                    }
 
-		}
+                    dashboard.nextRound(turnNumber);
 
-		@Override
-		public void keyReleased(KeyEvent e) {
+                    turnNumber++;
 
-		}
-	}
+                } catch (InterruptedException e) {
+                    System.out.println(e.getMessage());
+                }
+            } else {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
+    private class KeyControls implements KeyListener {
+
+        @Override
+        public void keyPressed(KeyEvent event) {
+            int keyCode = event.getKeyCode();
+
+            switch (keyCode) {
+            case 37: // FLECHE GAUCHE
+                // si le dernier deplacement était en haut , en bas ou à gauche
+                if (carMoveUtility.checkMoveLeft(manager)) {
+                    System.out.println("DEPLACEMENT A GAUCHE");
+                    manager.moveLeftCar();
+
+                    imageCar = paintStrategy.getImageLeft();
+                    paintStrategy.setImage(imageCar);
+                    dashboard.setPaintStrategy(paintStrategy);
+
+                    // Sauvegarde du dernier deplacement efffectue
+                    carMoveUtility.saveLastMove(keyCode, manager);
+                } else {
+                    System.out.println("DEPLACEMENT IMPOSSIBLE, SCORE-1");
+                    GameConfiguration.SCORE--;
+                }
+                break;
+            case 38: // FLECHE DU HAUT
+                // si le dernier deplacement était a gauche , a droite ou en haut
+                if (carMoveUtility.checkMoveUp(manager)) {
+                    System.out.println("DEPLACEMENT EN HAUT");
+                    manager.moveUpCar();
+
+                    imageCar = paintStrategy.getImageUp();
+                    paintStrategy.setImage(imageCar);
+                    dashboard.setPaintStrategy(paintStrategy);
+
+                    // Sauvegarde du dernier deplacement efffectue
+                    carMoveUtility.saveLastMove(keyCode, manager);
+                } else {
+                    System.out.println("DEPLACEMENT IMPOSSIBLE, SCORE-1");
+                    GameConfiguration.SCORE--;
+                }
+                break;
+
+            case 39: // FLECHE DROITE
+                // si le dernier deplacement était en haut , en bas ou a droite
+                if (carMoveUtility.checkMoveRight(manager)) {
+                    System.out.println("DEPLACEMENT A DROITE");
+                    manager.moveRightCar();
+
+                    imageCar = paintStrategy.getImageRight();
+                    paintStrategy.setImage(imageCar);
+                    dashboard.setPaintStrategy(paintStrategy);
+
+                    // Sauvegarde du dernier deplacement efffectue
+                    carMoveUtility.saveLastMove(keyCode, manager);
+                } else {
+                    System.out.println("DEPLACEMENT IMPOSSIBLE, SCORE-1");
+                    GameConfiguration.SCORE--;
+                }
+                break;
+            case 40: // DEPLACEMENT EN BAS
+                // si le dernier deplacement était a gauche , a droite ou en bas
+                if (carMoveUtility.checkMoveBottom(manager)) {
+                    System.out.println("DEPLACEMENT EN BAS ");
+                    manager.moveDownCar();
+
+                    imageCar = paintStrategy.getImageDown();
+                    paintStrategy.setImage(imageCar);
+                    dashboard.setPaintStrategy(paintStrategy);
+
+                    // Sauvegarde du dernier deplacement efffectue
+                    carMoveUtility.saveLastMove(keyCode, manager);
+                } else {
+                    System.out.println("DEPLACEMENT IMPOSSIBLE, SCORE-1");
+                    GameConfiguration.SCORE--;
+                }
+                break;
+            default:
+                break;
+            }
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+
+        }
+    }
 
 }
