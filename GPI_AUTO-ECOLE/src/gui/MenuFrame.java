@@ -38,7 +38,7 @@ public class MenuFrame extends JFrame {
     protected void initStyle() {
         Font font = new Font(Font.MONOSPACED, Font.CENTER_BASELINE, 110);
         jeu.setFont(font);
-        jeu.setForeground(Color.decode("#2832c2"));
+        jeu.setForeground(Color.decode("#ffffff"));
 
         start.setBackground(new Color(0xffffff));
         start.setForeground(Color.BLACK);
@@ -112,7 +112,7 @@ public class MenuFrame extends JFrame {
 
         public void actionPerformed(ActionEvent e) {
             frame.dispose();
-            new ReglesFrame();
+            new ReglesFrame(false);
         }
 
     }

@@ -28,8 +28,11 @@ public class ReglesFrame extends JFrame {
 
     protected JButton menu = new JButton("Menu");
 
-    public ReglesFrame() {
+    private boolean inGame;
+
+    public ReglesFrame(boolean inGame) {
         super("Auto-École - Règles");
+        this.inGame = inGame;
 
         initStyle();
 
@@ -39,15 +42,15 @@ public class ReglesFrame extends JFrame {
     protected void initStyle() {
         Font font = new Font(Font.MONOSPACED, Font.CENTER_BASELINE, 70);
         regles.setFont(font);
-        regles.setForeground(Color.decode("#2832c2"));
+        regles.setForeground(Color.decode("#eeeeee"));
 
         Font fontList = new Font(Font.DIALOG, Font.CENTER_BASELINE, 22);
         regle1.setFont(fontList);
         regle1.setForeground(Color.decode("#eeeeee"));
         regle2.setFont(fontList);
-        regle2.setForeground(Color.decode("#ffffff"));
+        regle2.setForeground(Color.decode("#eeeeee"));
         regle3.setFont(fontList);
-        regle3.setForeground(Color.decode("#ffffff"));
+        regle3.setForeground(Color.decode("#eeeeee"));
 
         menu.setFont(BUTTON_FONT);
     }
@@ -95,11 +98,17 @@ public class ReglesFrame extends JFrame {
 
             menu.setUI(new StyledButtonUI());
             menu.setBounds(290, 445, 220, 78);
+            if (inGame) {
+                menu.setText("Compris");
+                menu.addActionListener(new ActionContinue(this));
+                this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            } else {
+                menu.addActionListener(new ActionMenu(this));
+                this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+            }
             imgGui.add(menu);
-            menu.addActionListener(new ActionMenu(this));
 
-            this.add(imgGui);
-            this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+            this.add(imgGui);            
             this.setBounds(500, 100, 800, 600);
             this.setLocationRelativeTo(null);
             this.setResizable(false);
@@ -119,6 +128,19 @@ public class ReglesFrame extends JFrame {
         public void actionPerformed(ActionEvent e) {
             frame.dispose();
             new MenuFrame();
+        }
+
+    }
+
+    class ActionContinue implements ActionListener {
+        private JFrame frame;
+
+        public ActionContinue(JFrame frame) {
+            this.frame = frame;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            frame.dispose();
         }
 
     }

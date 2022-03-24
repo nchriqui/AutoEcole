@@ -137,7 +137,7 @@ public class MainGUI extends JFrame implements Runnable {
 
     private JDialog createDialog(final JFrame frame) {
         final JDialog modelDialog = new JDialog(frame, "Pause", Dialog.ModalityType.DOCUMENT_MODAL);
-        modelDialog.setBounds(500, 250, 400, 300);
+        modelDialog.setBounds(500, 250, 400, 340);
         modelDialog.getContentPane().setBackground(Color.black);
         // modelDialog.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         modelDialog.setUndecorated(true);
@@ -151,18 +151,24 @@ public class MainGUI extends JFrame implements Runnable {
         panTitle.add(pauseTitle);
         pausePan.add(panTitle);
         dialogContainer.add(pausePan, BorderLayout.NORTH);
-        JButton exitButton = new JButton("Quitter");
-        exitButton.setUI(new StyledButtonUI());
-        exitButton.setFont(buttonFont);
         JButton continueButton = new JButton("Reprendre");
         continueButton.setUI(new StyledButtonUI());
         continueButton.setFont(buttonFont);
+        JButton exitButton = new JButton("Quitter");
+        exitButton.setUI(new StyledButtonUI());
+        exitButton.setFont(buttonFont);
+        JButton reglesButton = new JButton("Règles");
+        reglesButton.setUI(new StyledButtonUI());
+        reglesButton.setFont(buttonFont);
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttonPanel.add(Box.createVerticalStrut(30));
         buttonPanel.add(continueButton);
+        buttonPanel.add(Box.createVerticalStrut(30));
+        reglesButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        buttonPanel.add(reglesButton);
         buttonPanel.add(Box.createVerticalStrut(30));
         exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttonPanel.add(exitButton);
@@ -175,11 +181,23 @@ public class MainGUI extends JFrame implements Runnable {
             }
         });
 
+        reglesButton.addActionListener(new ReglesAction());
         exitButton.addActionListener(new ExitAction(this));
 
         dialogContainer.add(buttonPanel, BorderLayout.CENTER);
 
         return modelDialog;
+    }
+    
+    class ReglesAction implements ActionListener {
+
+        public ReglesAction() {
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            new ReglesFrame(true);
+        }
+
     }
 
     private class ExitAction implements ActionListener {
