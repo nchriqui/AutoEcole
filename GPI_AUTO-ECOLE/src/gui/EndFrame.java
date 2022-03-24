@@ -37,67 +37,76 @@ public class EndFrame extends JFrame {
     private PaintStrategy paintStrategy;
 
     public EndFrame(int end, PaintStrategy paintStrategy) {
-        super("End Game");
+        super("Auto-École - Fin de partie");
         this.end = end;
         this.paintStrategy = paintStrategy;
-        endgame();
+
+        initStyle();
+
+        initLayout();
     }
 
-    private void endgame() {
+    protected void initStyle() {
+        endLabel.setFont(MENU_FONT);
+        endLabel.setForeground(Color.WHITE);
+
+        affichage.setEditable(false);
+        affichage.setOpaque(false);
+        affichage.setFont(new Font(Font.MONOSPACED, Font.BOLD, 28));
+        affichage.setForeground(Color.WHITE);
+
+        replaySameButton.setFont(BUTTON_FONT);
+
+        replayButton.setFont(BUTTON_FONT);
+
+        exitButton.setFont(BUTTON_FONT);
+
+        menuButton.setFont(BUTTON_FONT);
+    }
+
+    protected void initLayout() {
         Image img = null;
 
         try {
             if (end == 0) {
                 img = ImageIO.read(new File("src/images/echec.jpg"));
-                valider = "PERMIS ECHOUE ! vous avez fait plus\nde 5 erreurs.";
+                valider = "PERMIS ECHOUE ! Vous avez fait plus\nde 5 erreurs. ";
                 valider += "Veuillez réessayer !\n";
             } else if (end == 1) {
                 img = ImageIO.read(new File("src/images/reussir.jpg"));
-                valider = "Le temps est écoulé, vous avez tenu\njusqu'au bout.";
+                valider = "Le temps est écoulé, vous avez tenu\njusqu'au bout. ";
                 valider += "PERMIS VALIDE !\n";
-                valider += "TOUTES MES FELICITATIONS ! \n";
+                valider += "TOUTES MES FELICITATIONS !\n";
             }
             ImageGUI imgGui = new ImageGUI(img);
 
             imgGui.setLayout(null);
 
             endLabel.setBounds(190, -380, 450, 850);
-            endLabel.setFont(MENU_FONT);
-            endLabel.setForeground(Color.WHITE);
             imgGui.add(endLabel);
 
             affichage.setText(valider);
-            affichage.setEditable(false);
-            affichage.setOpaque(false);
-            affichage.setFont(new Font(Font.MONOSPACED, Font.BOLD, 28));
-            affichage.setForeground(Color.WHITE);
             affichage.setBounds(115, 115, 720, 120);
             imgGui.add(affichage);
 
-            replayButton.setUI(new StyledButtonUI());
-            replayButton.setFont(BUTTON_FONT);
             replaySameButton.setUI(new StyledButtonUI());
-            replaySameButton.setFont(BUTTON_FONT);
-            exitButton.setUI(new StyledButtonUI());
-            exitButton.setFont(BUTTON_FONT);
-            menuButton.setUI(new StyledButtonUI());
-            menuButton.setFont(BUTTON_FONT);
-
             replaySameButton.setBounds(320, 250, 160, 50);
             imgGui.add(replaySameButton);
+            replaySameButton.addActionListener(new ReplaySameAction(this, paintStrategy));
 
+            replayButton.setUI(new StyledButtonUI());
             replayButton.setBounds(250, 330, 300, 50);
             imgGui.add(replayButton);
+            replayButton.addActionListener(new ReplayAction(this));
 
+            menuButton.setUI(new StyledButtonUI());
             menuButton.setBounds(320, 410, 160, 50);
             imgGui.add(menuButton);
+            menuButton.addActionListener(new MenuAction(this));
 
+            exitButton.setUI(new StyledButtonUI());
             exitButton.setBounds(320, 490, 160, 50);
             imgGui.add(exitButton);
-
-            replayButton.addActionListener(new ReplayAction(this));
-            replaySameButton.addActionListener(new ReplaySameAction(this, "Driving school", paintStrategy));
-            menuButton.addActionListener(new MenuAction(this));
             exitButton.addActionListener(new ExitAction(this));
 
             this.add(imgGui);
@@ -107,10 +116,8 @@ public class EndFrame extends JFrame {
             this.setResizable(false);
             this.setVisible(true);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
     }
 
     private class ReplayAction implements ActionListener {
@@ -132,19 +139,17 @@ public class EndFrame extends JFrame {
     private class ReplaySameAction implements ActionListener {
         // Window to be closed.
         private JFrame window;
-        private String title;
         private PaintStrategy paintStrategy;
 
-        public ReplaySameAction(JFrame window, String title, PaintStrategy paintStrategy) {
+        public ReplaySameAction(JFrame window, PaintStrategy paintStrategy) {
             this.window = window;
-            this.title = title;
             this.paintStrategy = paintStrategy;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             window.dispose();
-            Thread gameThread = new Thread(new MainGUI(title, paintStrategy));
+            Thread gameThread = new Thread(new MainGUI(paintStrategy));
             gameThread.start();
         }
     }

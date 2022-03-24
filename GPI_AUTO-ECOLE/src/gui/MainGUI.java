@@ -71,8 +71,8 @@ public class MainGUI extends JFrame implements Runnable {
 
     private boolean stop = false;
 
-    public MainGUI(String title, PaintStrategy paintStrategy) {
-        super(title);
+    public MainGUI(PaintStrategy paintStrategy) {
+        super("Auto-École - Examen");
         this.paintStrategy = paintStrategy;
         init();
     }

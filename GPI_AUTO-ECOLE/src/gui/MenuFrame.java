@@ -25,48 +25,55 @@ public class MenuFrame extends JFrame {
 
     protected JButton exit = new JButton("Quitter");
 
-    public MenuFrame() {
+    protected JButton regles = new JButton("Règles");
 
+    public MenuFrame() {
         super("Auto-École - Menu");
 
         initStyle();
 
         initLayout();
-
     }
 
     protected void initStyle() {
-        Font font = new Font("Courier", Font.CENTER_BASELINE, 110);
+        Font font = new Font(Font.MONOSPACED, Font.CENTER_BASELINE, 110);
         jeu.setFont(font);
         jeu.setForeground(Color.decode("#2832c2"));
 
+        start.setBackground(new Color(0xffffff));
+        start.setForeground(Color.BLACK);
         start.setFont(BUTTON_FONT);
+
+        regles.setBackground(new Color(0xffffff));
+        regles.setForeground(Color.BLACK);
+        regles.setFont(BUTTON_FONT);
+
+        exit.setBackground(new Color(0xffffff));
+        exit.setForeground(Color.BLACK);
         exit.setFont(BUTTON_FONT);
     }
 
     protected void initLayout() {
-
         try {
             Image img = ImageIO.read(new File("src/images/background.jpg"));
             ImageGUI imgGui = new ImageGUI(img);
 
             imgGui.setLayout(null);
 
-            jeu.setBounds(23, -350, 3000, 850);
+            jeu.setBounds(23, -350, 800, 850);
             imgGui.add(jeu);
 
-            start.setBackground(new Color(0xffffff));
-            start.setForeground(Color.BLACK);
-            start.setBounds(315, 220, 220, 78);
-
+            start.setBounds(315, 190, 220, 78);
             start.setUI(new StyledButtonUI());
             imgGui.add(start);
             start.addActionListener(new ActionStart(this));
 
-            exit.setBackground(new Color(0xffffff));
-            exit.setForeground(Color.BLACK);
-            exit.setBounds(315, 420, 220, 78);
+            regles.setBounds(315, 300, 220, 78);
+            regles.setUI(new StyledButtonUI());
+            imgGui.add(regles);
+            regles.addActionListener(new ActionRegles(this));
 
+            exit.setBounds(315, 410, 220, 78);
             exit.setUI(new StyledButtonUI());
             imgGui.add(exit);
             exit.addActionListener(new ActionExit(this));
@@ -78,7 +85,6 @@ public class MenuFrame extends JFrame {
             this.setResizable(false);
             this.setVisible(true);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -93,6 +99,20 @@ public class MenuFrame extends JFrame {
         public void actionPerformed(ActionEvent e) {
             frame.dispose();
             new ChoiceFrame();
+        }
+
+    }
+
+    class ActionRegles implements ActionListener {
+        private JFrame frame;
+
+        public ActionRegles(JFrame frame) {
+            this.frame = frame;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            frame.dispose();
+            new ReglesFrame();
         }
 
     }

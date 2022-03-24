@@ -29,60 +29,58 @@ public class ChoiceFrame extends JFrame {
     protected JButton menu = new JButton("Menu");
 
     public ChoiceFrame() {
-
         super("Auto-École - Choix du véhicule");
 
         initStyle();
 
         initLayout();
-
     }
 
     protected void initStyle() {
-        Font font = new Font("Courier", Font.BOLD, 70);
+        Font font = new Font(Font.MONOSPACED, Font.BOLD, 70);
         jeu.setFont(font);
         jeu.setForeground(Color.decode("#cccccc"));
 
+        car.setOpaque(false);
+        car.setContentAreaFilled(false);
+        car.setBorderPainted(false);
+
+        motorbike.setOpaque(false);
+        motorbike.setContentAreaFilled(false);
+        motorbike.setBorderPainted(false);
+
+        truck.setOpaque(false);
+        truck.setContentAreaFilled(false);
+        truck.setBorderPainted(false);
+
+        menu.setBackground(new Color(0xffffff));
+        menu.setForeground(Color.BLACK);
         menu.setFont(BUTTON_FONT);
     }
 
     protected void initLayout() {
-
         try {
             Image img = ImageIO.read(new File("src/images/choiceBg.png"));
             ImageGUI imgGui = new ImageGUI(img);
 
             imgGui.setLayout(null);
 
-            jeu.setBounds(118, -350, 3000, 850);
+            jeu.setBounds(118, -350, 950, 850);
             imgGui.add(jeu);
 
             car.setBounds(90, 190, 215, 101);
-            car.setOpaque(true);
-            car.setContentAreaFilled(false);
-            car.setBorderPainted(false);
             imgGui.add(car);
+            car.addActionListener(new ActionStart(this, 1));
 
             motorbike.setBounds(490, 190, 214, 101);
-            motorbike.setOpaque(false);
-            motorbike.setContentAreaFilled(false);
-            motorbike.setBorderPainted(false);
             imgGui.add(motorbike);
+            motorbike.addActionListener(new ActionStart(this, 2));
 
             truck.setBounds(860, 190, 215, 101);
-            truck.setOpaque(false);
-            truck.setContentAreaFilled(false);
-            truck.setBorderPainted(false);
             imgGui.add(truck);
-
-            car.addActionListener(new ActionStart(this, 1));
-            motorbike.addActionListener(new ActionStart(this, 2));
             truck.addActionListener(new ActionStart(this, 3));
 
-            menu.setBackground(new Color(0xffffff));
-            menu.setForeground(Color.BLACK);
             menu.setBounds(490, 420, 220, 78);
-
             menu.setUI(new StyledButtonUI());
             imgGui.add(menu);
             menu.addActionListener(new ActionMenu(this));
@@ -94,7 +92,6 @@ public class ChoiceFrame extends JFrame {
             this.setResizable(false);
             this.setVisible(true);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -111,7 +108,7 @@ public class ChoiceFrame extends JFrame {
         public void actionPerformed(ActionEvent e) {
             frame.dispose();
 
-            MainGUI gameMain = new MainGUI("Driving school", new PaintStrategy(choice));
+            MainGUI gameMain = new MainGUI(new PaintStrategy(choice));
 
             Thread gameThread = new Thread(gameMain);
             gameThread.start();
