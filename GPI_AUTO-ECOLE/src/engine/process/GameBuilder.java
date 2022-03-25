@@ -14,7 +14,10 @@ public class GameBuilder {
 
 	public static MobileElementManager buildInitMobile(Map map) {
 		MobileElementManager manager = new MobileElementManager(map);
-		manager.setLastMoveRight(true);
+		manager.setLastMoveUp(true);
+		manager.setLastMoveDown(false);
+		manager.setLastMoveLeft(false);
+		manager.setLastMoveRight(false);
 
 		intializeCar(map, manager);
 
@@ -24,7 +27,7 @@ public class GameBuilder {
 	public static void intializeCar(Map map, MobileElementManager manager) {
 		Block block = map.getBlock(GameConfiguration.LINE_COUNT - 2, 1);
 		Car car = new Car(block);
-		car.setLastPosition(new Block(block.getLine() - 1, block.getColumn()));
+		car.setLastPosition(new Block(block.getLine() + 1, block.getColumn()));
 		manager.setCar(car);
 	}
 

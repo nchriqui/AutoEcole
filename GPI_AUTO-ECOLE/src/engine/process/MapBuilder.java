@@ -25,6 +25,8 @@ public class MapBuilder {
 	private List<Block> pHCrossings = new ArrayList<Block>();
 	private List<Block> stops = new ArrayList<Block>();
 	private List<Block> prohibitedDirs = new ArrayList<Block>();
+	private List<Block> waitStopV = new ArrayList<Block>();
+	private List<Block> waitStopH = new ArrayList<Block>();
 
 	private int lineCount;
 	private int columnCount;
@@ -79,6 +81,14 @@ public class MapBuilder {
 	public List<Block> getProhibitedDirs() {
 		return prohibitedDirs;
 	}
+	
+	public List<Block> getWaitStopV() {
+		return waitStopV;
+	}
+
+	public List<Block> getWaitStopH() {
+		return waitStopH;
+	}
 
 	public void initMapCSV(int lineCount, int columnCount) throws FileNotFoundException {
 		Scanner sc = new Scanner(new File(GameConfiguration.mapCSV1));
@@ -97,7 +107,27 @@ public class MapBuilder {
 			}
 			switch (current) {
 				case "r" -> {// Road
-					Road roadX = new Road(new Block(row, column));
+					Road roadX = new Road(new Block(row, column),0);
+					roads.add(roadX);
+					break;
+				}
+				case "a" -> {// Road with direction left
+					Road roadX = new Road(new Block(row, column), 1);
+					roads.add(roadX);
+					break;
+				}
+				case "b" -> {// Road with direction up
+					Road roadX = new Road(new Block(row, column), 2);
+					roads.add(roadX);
+					break;
+				}
+				case "c" -> {// Road with direction right
+					Road roadX = new Road(new Block(row, column), 3);
+					roads.add(roadX);
+					break;
+				}
+				case "d" -> {// Road with direction down
+					Road roadX = new Road(new Block(row, column), 4);
 					roads.add(roadX);
 					break;
 				}
@@ -107,19 +137,31 @@ public class MapBuilder {
 					break;
 				}
 				case "v" -> {// Vertical Pedestian
-					Road roadX = new Road(new Block(row, column));
+					Road roadX = new Road(new Block(row, column),0);
 					roads.add(roadX);
 					pVCrossings.add(new Block(row, column));
 					break;
 				}
 				case "h" -> {// Horizontal Pedestian
-					Road roadX = new Road(new Block(row, column));
+					Road roadX = new Road(new Block(row, column),0);
 					roads.add(roadX);
 					pHCrossings.add(new Block(row, column));
 					break;
 				}
 				case "s" -> {// Stops
 					stops.add(new Block(row, column));
+					break;
+				}
+				case "t" -> {// Wait Stops vertical
+					Road roadX = new Road(new Block(row, column), 0);
+					roads.add(roadX);
+					waitStopV.add(new Block(row, column));
+					break;
+				}
+				case "u" -> {// Wait Stops Horizontal
+					Road roadX = new Road(new Block(row, column), 0);
+					roads.add(roadX);
+					waitStopH.add(new Block(row, column));
 					break;
 				}
 				case "p" -> {// Prohibited Directions

@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -66,6 +68,14 @@ public class GameDisplay extends JPanel {
         for (Block stopX : mapBuilder.getStops()) {
             paintStrategy.paintStop(stopX, g);
         }
+        
+        for (Block waitStopV : mapBuilder.getWaitStopV()) {
+			paintStrategy.paintWaitStopV(waitStopV, g);
+		}
+
+		for (Block waitStopH : mapBuilder.getWaitStopH()) {
+			paintStrategy.paintWaitStopH(waitStopH, g);
+		}
 
         for (Block prohibitedDirX : mapBuilder.getProhibitedDirs()) {
             paintStrategy.paintProhibitedDir(prohibitedDirX, g);
@@ -78,45 +88,28 @@ public class GameDisplay extends JPanel {
 
     public void checkLight(Car car) {
         Block carPosition = car.getPosition();
-        int direction = carPosition.recupDirection(car.getLastPosition());
+        List<Block> allPedetrian = new ArrayList<Block>();
+		allPedetrian.addAll(mapBuilder.getpHCrossings());
+		allPedetrian.addAll(mapBuilder.getpVCrossings());
 
-        for (Block pedestianV : mapBuilder.getpVCrossings()) {
-            if (carPosition.compareBlock(pedestianV)) {
-                if (paintStrategy.isLightRed()) {
-                    GameConfiguration.SCORE = GameConfiguration.SCORE - 2;
+		for (Block pedestianX : allPedetrian) {
+			if (carPosition.compareBlock(pedestianX)) {
+				if (paintStrategy.isLightRed()) {
+					GameConfiguration.SCORE = GameConfiguration.SCORE - 2;
 
-                    System.out.println("VOUS ETES PASSE ALORS QUE LE FEU ETAIT ROUGE !!!!!!");
-                    System.out.println("SCORE-2");
-                }
-                if (paintStrategy.isLightOrange()) {
-                    GameConfiguration.SCORE = GameConfiguration.SCORE - 1;
+					System.out.println("VOUS ETES PASSE ALORS QUE LE FEU ETAIT ROUGE !!!!!!");
+					System.out.println("SCORE-2");
+				}
+				if (paintStrategy.isLightOrange()) {
+					GameConfiguration.SCORE = GameConfiguration.SCORE - 1;
 
-                    System.out.println("VOUS ETES PASSE ALORS QUE LE FEU ETAIT JAUNE !!!!!!");
-                    System.out.println("SCORE-1");
-                }
-                /* We move the car for leave out the condition */
-                manager.pedestrianMove(car, direction);
-            }
-        }
-
-        for (Block pedestianH : mapBuilder.getpHCrossings()) {
-            if (carPosition.compareBlock(pedestianH)) {
-                if (paintStrategy.isLightRed()) {
-                    GameConfiguration.SCORE = GameConfiguration.SCORE - 2;
-
-                    System.out.println("VOUS ETES PASSE ALORS QUE LE FEU ETAIT ROUGE !!!!!!");
-                    System.out.println("SCORE-2");
-                }
-                if (paintStrategy.isLightOrange()) {
-                    GameConfiguration.SCORE = GameConfiguration.SCORE - 1;
-
-                    System.out.println("VOUS ETES PASSE ALORS QUE LE FEU ETAIT JAUNE !!!!!!");
-                    System.out.println("SCORE-1");
-                }
-                /* We move the car for leave out the condition */
-                manager.pedestrianMove(car, direction);
-            }
-        }
+					System.out.println("VOUS ETES PASSE ALORS QUE LE FEU ETAIT JAUNE !!!!!!");
+					System.out.println("SCORE-1");
+				}
+				/* We move the car for leave out the condition */
+				manager.moveAuto();
+			}
+		}
     }
 
     public Color checkColor(PaintStrategy paint) {

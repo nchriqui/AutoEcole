@@ -13,7 +13,7 @@ public class MobileElementManager {
 	private Map map;
 	private Car car;
 
-	private boolean lastMoveUp = false;
+	private boolean lastMoveUp = true;
 	private boolean lastMoveDown = false;
 	private boolean lastMoveRight = false;
 	private boolean lastMoveLeft = false;
@@ -62,7 +62,7 @@ public class MobileElementManager {
 		this.lastMoveLeft = lastMoveLeft;
 	}
 
-	public void moveLeftCar() {
+	public boolean moveLeftCar() {
 		Block position = car.getPosition();
 		Block newPosition = map.getBlock(position.getLine(), position.getColumn() - 1);
 
@@ -76,10 +76,13 @@ public class MobileElementManager {
 		if ((lastMoveUp || lastMoveDown || lastMoveLeft) && verif) {
 			car.setLastPosition(position);
 			car.setPosition(newPosition);
+			callCheckClignotants();
+			return true;
 		}
+		return false;
 	}
 
-	public void moveRightCar() {
+	public boolean moveRightCar() {
 		Block position = car.getPosition();
 		Block newPosition = map.getBlock(position.getLine(), position.getColumn() + 1);
 
@@ -93,10 +96,13 @@ public class MobileElementManager {
 		if ((lastMoveUp || lastMoveDown || lastMoveRight) && verif) {
 			car.setLastPosition(position);
 			car.setPosition(newPosition);
+			callCheckClignotants();
+			return true;
 		}
+		return false;
 	}
 
-	public void moveDownCar() {
+	public boolean moveDownCar() {
 		Block position = car.getPosition();
 		Block newPosition = map.getBlock(position.getLine() + 1, position.getColumn());
 
@@ -109,10 +115,13 @@ public class MobileElementManager {
 		if ((lastMoveRight || lastMoveLeft || lastMoveDown) && verif) {
 			car.setLastPosition(position);
 			car.setPosition(newPosition);
+			callCheckClignotants();
+			return true;
 		}
+		return false;
 	}
 
-	public void moveUpCar() {
+	public boolean moveUpCar() {
 		Block position = car.getPosition();
 		Block newPosition = map.getBlock(position.getLine() - 1, position.getColumn());
 
@@ -125,15 +134,28 @@ public class MobileElementManager {
 		if ((lastMoveRight || lastMoveLeft || lastMoveUp) && verif) {
 			car.setLastPosition(position);
 			car.setPosition(newPosition);
+			callCheckClignotants();
+			return true;
 		}
+		return false;
 	}
 
 	// Check if the move is possible
 	public boolean CheckMove(List<Road> RoadsList, Block block) {
+		int carDirection = car.recupDirection();
 		boolean verif = false;
 		for (Road r : RoadsList) {
+			int roadDirection = r.getDirection();
+			boolean directionVerif = (carDirection == roadDirection);
 			if (r.getPosition().compareBlock(block)) {
-				verif = true;
+				if (roadDirection == 0 || directionVerif) {
+					verif = true;
+				}
+				if (!directionVerif && roadDirection != 0) {
+					System.out.println("\nLA ROUTE QUE VOUS VOULEZ EMPRUNTER EST A CONTRE SENS ");
+					System.out.println("SCORE -1\n");
+					GameConfiguration.SCORE--;
+				}
 			}
 		}
 		return verif;
@@ -143,8 +165,10 @@ public class MobileElementManager {
 	 * Check the move, when the car pass on a pedestrian , to decrement the score
 	 * just one time
 	 */
-	public void pedestrianMove(Car car, int direction) {
+	public void moveAuto() {
 		Block carPosition = car.getPosition();
+		int direction = car.recupDirection();
+		
 		switch (direction) {
 		case 1: { // gauche
 			car.setPosition(new Block(carPosition.getLine(), carPosition.getColumn() - 1));
@@ -166,5 +190,75 @@ public class MobileElementManager {
 			throw new IllegalArgumentException("Unexpected value: " + direction);
 		}
 	}
+	
+	public boolean checkWaitStop() {
+		MapBuilder mapBuilder = new MapBuilder(map.getLineCount(), map.getColumnCount());
+		Block carPosition = car.getPosition();
+		List<Block> allWaitStop = new ArrayList<Block>();
+		allWaitStop.addAll(mapBuilder.getWaitStopH());
+		allWaitStop.addAll(mapBuilder.getWaitStopV());
 
+		for (Block waitStopX : allWaitStop) {
+			if (carPosition.compareBlock(waitStopX)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void callCheckClignotants() {
+		if (lastMoveDown || lastMoveUp) {
+			if (car.recupDirection() == 1) { // si deplacement gauche
+				checkClignotants("gauche");
+			}
+			if (car.recupDirection() == 3) { // si deplacement droit
+				checkClignotants("droit");
+			}
+		}
+
+		if (lastMoveRight) {
+			if (car.recupDirection() == 2) { // si deplacement haut
+				checkClignotants("gauche");
+			}
+			if (car.recupDirection() == 4) { // si deplacement bas
+				checkClignotants("droit");
+			}
+		}
+
+		if (lastMoveLeft) {
+			if (car.recupDirection() == 2) { // si deplacement haut
+				checkClignotants("droit");
+			}
+			if (car.recupDirection() == 4) {// si deplacement bas
+				checkClignotants("gauche");
+			}
+		}
+	}
+
+	public void checkClignotants(String clignotant) {
+
+		switch (clignotant) {
+		case ("gauche"):
+			if (car.isClignotantGauche()) {
+				System.out.println("VOUS AVEZ ACTIVE LE CLIGONANT GAUCHE AVANT DE TOURNER \n");
+			} else {
+				System.out.println("VOUS N'AVEZ PAS ACTIVE LE CLIGONANT GAUCHE AVANT DE TOURNER, SCORE-1 \n");
+				GameConfiguration.SCORE--;
+			}
+			break;
+
+		case ("droit"):
+			if (car.isClignotantDroit()) {
+				System.out.println("VOUS AVEZ ACTIVE LE CLIGONANT DROIT AVANT DE TOURNER \n");
+			} else {
+				System.out.println("VOUS N'AVEZ PAS ACTIVE LE CLIGONANT DROIT AVANT DE TOURNER, SCORE-1 \n");
+				GameConfiguration.SCORE--;
+			}
+			break;
+
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + clignotant);
+
+		}
+	}
 }
