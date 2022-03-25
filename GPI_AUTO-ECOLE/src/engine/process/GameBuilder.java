@@ -28,6 +28,7 @@ public class GameBuilder {
 		Block block = map.getBlock(GameConfiguration.LINE_COUNT - 2, 1);
 		Car car = new Car(block);
 		car.setLastPosition(new Block(block.getLine() + 1, block.getColumn()));
+		car.setVitesse(0);
 		manager.setCar(car);
 	}
 

@@ -5,7 +5,8 @@ import engine.map.Block;
 public class Car extends MobileElement {
 
 	private Block lastPosition;
-	
+	int vitesse;
+
 	private boolean ClignotantGauche = false;
 	private boolean ClignotantDroit = false;
 
@@ -37,6 +38,14 @@ public class Car extends MobileElement {
 		ClignotantDroit = clignotantDroit;
 	}
 
+	public int getVitesse() {
+		return vitesse;
+	}
+
+	public void setVitesse(int vitesse) {
+		this.vitesse = vitesse;
+	}
+
 	public int recupDirection() {
 		int direction = 0;
 		/*
@@ -58,13 +67,36 @@ public class Car extends MobileElement {
 		}
 		return direction;
 	}
+	
+	public void shifter(int vitesse) {
+		switch (vitesse) {
+		case 1:
+			System.out.println("1ere vitesse");
+			setVitesse(1);
+			break;
+		case 2:
+			System.out.println("2eme vitesse");
+			setVitesse(2);
+			break;
+		case 3:
+			System.out.println("3eme vitesse");
+			setVitesse(3);
+			break;
+		case 4:
+			System.out.println("4eme vitesse");
+			setVitesse(4);
+			break;
+		case 5:
+			System.out.println("5eme vitesse");
+			setVitesse(5);
+			break;
+		}
+	}
 
 	@Override
 	public String toString() {
-		return "Car [lastPosition=" + lastPosition + ", ClignotantGauche=" + ClignotantGauche + ", ClignotantDroit="
-				+ ClignotantDroit + ", getLastPosition()=" + getLastPosition() + ", isClignotantGauche()="
-				+ isClignotantGauche() + ", isClignotantDroit()=" + isClignotantDroit() + ", recupDirection()="
-				+ recupDirection() + "]";
+		return "Car [lastPosition=" + lastPosition + ", vitesse=" + vitesse + ", ClignotantGauche=" + ClignotantGauche
+				+ ", ClignotantDroit=" + ClignotantDroit + "]";
 	}
 
 }

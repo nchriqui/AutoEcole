@@ -62,6 +62,7 @@ public class MainGUI extends JFrame implements Runnable {
 
 	private JButton turnRight = new JButton();
 
+	private JLabel clignotantLabel = new JLabel("Clignotants :");
 	private JPanel Clignotant = new JPanel();
 
     private JPanel control = new JPanel();
@@ -82,6 +83,11 @@ public class MainGUI extends JFrame implements Runnable {
 	private JLabel stopLabel = new JLabel("STOP :");
 	private JLabel stopValue = new JLabel("");
 	private JPanel stopPanel = new JPanel();
+	
+	private JLabel speedBoxLabel = new JLabel("Vitesse:");
+	private JLabel speedBoxValue = new JLabel("0");
+	private JLabel speedLabel = new JLabel("Compteur:");
+	private JLabel speedValue = new JLabel("0  Km/h");
 
     public MainGUI(PaintStrategy paintStrategy) {
         super("Auto-École - Examen");
@@ -163,20 +169,31 @@ public class MainGUI extends JFrame implements Runnable {
 			}
 		});
 
-        control.setLayout(new GridLayout(5, 1));
+        control.setLayout(new GridLayout(9, 1));
 
         pausePanel.add(pauseButton);
-        control.add(pausePanel);
+        control.add(pauseButton);
         timeValue.setFont(font);
         control.add(timeValue);
         
+        clignotantLabel.setFont(font);
+        Clignotant.add(clignotantLabel);
         Clignotant.add(turnLeft);
 		Clignotant.add(turnRight);
 		control.add(Clignotant);
+		
+		speedBoxLabel.setFont(font);
+		speedBoxValue.setFont(font);
+		speedLabel.setFont(font);
+		speedValue.setFont(font);
+		control.add(speedBoxLabel);
+		control.add(speedBoxValue);
+		control.add(speedLabel);
+		control.add(speedValue);
 
 		stopLabel.setFont(font);
 		stopValue.setFont(font);
-		stopPanel.setLayout(new GridLayout(2, 1));
+		stopPanel.setLayout(new GridLayout(1, 1));
 		stopPanel.add(stopLabel);
 		stopPanel.add(stopValue);
 		stopPanel.setVisible(false);
@@ -184,7 +201,7 @@ public class MainGUI extends JFrame implements Runnable {
 		
         scoreLabel.setFont(font);
         scoreValue.setFont(font);
-        scorePanel.setLayout(new GridLayout(2, 1));
+        scorePanel.setLayout(new GridLayout(1, 1));
         scorePanel.add(scoreLabel);
         scorePanel.add(scoreValue);
         control.add(scorePanel);
@@ -436,9 +453,31 @@ public class MainGUI extends JFrame implements Runnable {
                     GameConfiguration.SCORE--;
                 }
                 break;
+            case 49:
+			case 97:
+				manager.changeSpeed(1);
+				break;
+			case 50:
+			case 98:
+				manager.changeSpeed(2);
+				break;
+			case 51:
+			case 99:
+				manager.changeSpeed(3);
+				break;
+			case 52:
+			case 100:
+				manager.changeSpeed(4);
+				break;
+			case 53:
+			case 101:
+				manager.changeSpeed(5);
+				break;
             default:
                 break;
             }
+            speedBoxValue.setText("" + manager.getCar().getVitesse() + " e vitesse");
+			speedValue.setText("" + manager.getCar().getVitesse()*20 + " Km/h");
         }
 
         @Override

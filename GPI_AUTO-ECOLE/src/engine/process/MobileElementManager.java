@@ -261,4 +261,8 @@ public class MobileElementManager {
 
 		}
 	}
+	
+	public void changeSpeed(int vitesse) {
+		car.shifter(vitesse);
+	}
 }
