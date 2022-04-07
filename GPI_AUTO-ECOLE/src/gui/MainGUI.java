@@ -510,9 +510,4 @@ public class MainGUI extends JFrame implements Runnable {
 
 		}
 	}
-
-	public static void main(String[] args) {
-		Thread gameThread = new Thread(new MainGUI(new PaintStrategy(1)));
-		gameThread.start();
-	}
 }
