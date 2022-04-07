@@ -1,6 +1,3 @@
-/**
- * 
- */
 package chrono;
 
 import config.GameConfiguration;
@@ -9,7 +6,7 @@ import config.GameConfiguration;
  * The chronometer class is composed of the three cyclic counters. We can count
  * until 59 hours 59 minutes and 59 seconds.
  * 
- * @author afatc
+ * @author Auto-Ecole
  *
  */
 public class Chronometer {
@@ -38,21 +35,13 @@ public class Chronometer {
 		second.setValue(GameConfiguration.GAME_SECONDE_DURATION);
 	}
 
-	public void increment() {
-		second.increment();
-		if (second.getValue() == 0) {
-			minute.increment();
-		}
-
-	}
-
 	public void decrement() {
 		second.decrement();
 		if (second.getValue() == 59) {
 			minute.decrement();
 		}
 	}
-	
+
 	public boolean endChrono() {
 		boolean result = false;
 		if (this.getMinute().getValue() == 0 && this.getSecond().getValue() == 1) {

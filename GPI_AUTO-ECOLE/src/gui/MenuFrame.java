@@ -13,6 +13,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+/*
+ * This class serves to define and initialize the begin Frame 
+ */
+
 public class MenuFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;

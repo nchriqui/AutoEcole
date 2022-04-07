@@ -4,7 +4,11 @@ import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Car;
 import config.GameConfiguration;
-
+/**
+ * The essential class to the good initialization of the game and the objects.
+ * 
+ * @author Auto-Ecole
+ */
 public class GameBuilder {
 
 	public static Map buildMap() {

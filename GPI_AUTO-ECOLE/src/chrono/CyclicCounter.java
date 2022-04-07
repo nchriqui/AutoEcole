@@ -1,12 +1,9 @@
-/**
- * 
- */
 package chrono;
 
 /**
  * The cyclic counter is a bounded counter with cyclic value change.
  * 
- * @author afatc
+ * @author Auto-Ecole
  *
  */
 public class CyclicCounter extends BoundedCounter {
@@ -21,15 +18,6 @@ public class CyclicCounter extends BoundedCounter {
 			super.decrement();
 		} else {
 			setValue(getMax());
-		}
-	}
-
-	@Override
-	public void increment() {
-		if (getValue() < getMax()) {
-			super.increment();
-		} else {
-			setValue(getMin());
 		}
 	}
 

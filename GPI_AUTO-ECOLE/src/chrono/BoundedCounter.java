@@ -1,6 +1,3 @@
-/**
- * 
- */
 package chrono;
 
 /**
@@ -8,7 +5,7 @@ package chrono;
  * 
  * We can set freely these two values when creating the bounded counter.
  * 
- * @author afatc
+ * @author Auto-Ecole
  *
  */
 public class BoundedCounter extends Counter {
@@ -25,13 +22,6 @@ public class BoundedCounter extends Counter {
 	public void decrement() {
 		if (getValue() > min) {
 			super.decrement();
-		}
-	}
-
-	@Override
-	public void increment() {
-		if (getValue() < max) {
-			super.increment();
 		}
 	}
 

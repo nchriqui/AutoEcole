@@ -14,6 +14,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
+/*
+ * This class serves to define the Frame for the end if the game.
+ */
+
+
 public class EndFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;

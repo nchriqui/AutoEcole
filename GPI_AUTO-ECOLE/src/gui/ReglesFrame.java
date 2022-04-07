@@ -15,6 +15,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
+/*
+ * This class serve to define the rule's Frame
+ */
+
 public class ReglesFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;

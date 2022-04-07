@@ -9,6 +9,14 @@ import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Car;
 
+/**
+ * 
+ * This class is use to define the method for the moves of the car and the
+ * action related of the moving element.
+ * 
+ * @author Auto-Ecole
+ *
+ */
 public class MobileElementManager {
 	private Map map;
 	private Car car;
@@ -151,14 +159,18 @@ public class MobileElementManager {
 				if (roadDirection == 0 || directionVerif) {
 					verif = true;
 				}
-				if (!directionVerif && roadDirection != 0) {
-					System.out.println("\nLA ROUTE QUE VOUS VOULEZ EMPRUNTER EST A CONTRE SENS ");
-					System.out.println("SCORE -1\n");
-					GameConfiguration.SCORE--;
-				}
+				checkProhibitedDirection(directionVerif, roadDirection);
 			}
 		}
 		return verif;
+	}
+
+	public void checkProhibitedDirection(boolean directionEqual, int roadDirection) {
+		if (!directionEqual && roadDirection != 0) {
+			System.out.println("\nLA ROUTE QUE VOUS VOULEZ EMPRUNTER EST A CONTRE SENS ");
+			System.out.println("SCORE -1\n");
+			GameConfiguration.SCORE--;
+		}
 	}
 
 	/*
@@ -168,7 +180,7 @@ public class MobileElementManager {
 	public void moveAuto() {
 		Block carPosition = car.getPosition();
 		int direction = car.recupDirection();
-		
+
 		switch (direction) {
 		case 1: { // gauche
 			car.setPosition(new Block(carPosition.getLine(), carPosition.getColumn() - 1));
@@ -190,7 +202,7 @@ public class MobileElementManager {
 			throw new IllegalArgumentException("Unexpected value: " + direction);
 		}
 	}
-	
+
 	public boolean checkWaitStop() {
 		MapBuilder mapBuilder = new MapBuilder(map.getLineCount(), map.getColumnCount());
 		Block carPosition = car.getPosition();
@@ -261,8 +273,31 @@ public class MobileElementManager {
 
 		}
 	}
-	
+
 	public void changeSpeed(int vitesse) {
 		car.shifter(vitesse);
 	}
+
+	public Road recupRoad(Block position) {///
+		List<Road> roadList = new MapBuilder(map.getLineCount(), map.getColumnCount()).getRoads();
+		for (Road roadX : roadList) {
+			if (position.compareBlock(roadX.getPosition())) {
+				return roadX;
+			}
+		}
+
+		return new Road(position, 0, 100);
+	}
+
+	public void checkSpeedLimit() {///
+		Block carBlock = car.getPosition();
+		Road roadBlock = recupRoad(carBlock);
+		if (roadBlock.getSpeed() < car.getVitesse()) {
+			System.out.println("VOUS AVEZ DEPASSEZ LA LIMITE DE VITESSE");
+			System.out.println("SCORE -1 ");
+			GameConfiguration.SCORE--;
+			moveAuto();
+		}
+	}
+
 }

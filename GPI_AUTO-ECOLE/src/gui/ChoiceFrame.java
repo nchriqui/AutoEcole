@@ -14,6 +14,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+/*
+ * This class serves to define the Frame for the choice of the car
+ */
+
 public class ChoiceFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;

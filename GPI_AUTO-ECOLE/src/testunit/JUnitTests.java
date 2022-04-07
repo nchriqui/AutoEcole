@@ -4,7 +4,6 @@ package testunit;
 
 import org.junit.jupiter.api.Test;
 
-import config.GameConfiguration;
 import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Car;
@@ -19,7 +18,6 @@ import static org.junit.Assert.*;
 
 import javax.imageio.ImageIO;
 
-import gui.GameDisplay;
 import gui.PaintStrategy;
 
 class JUnitTests {
@@ -83,7 +81,6 @@ class JUnitTests {
 		PaintStrategy pstrategy = new PaintStrategy(1);
 		MobileElementManager manager = new MobileElementManager(testMap);
 		manager.setLastMoveRight(true);//On retient que la voiture est vers la droite
-		GameDisplay gamedisplay = new GameDisplay(testMap, manager, pstrategy);
 
 		Light lightX = new Light(new Block(4, 4), false);
 		

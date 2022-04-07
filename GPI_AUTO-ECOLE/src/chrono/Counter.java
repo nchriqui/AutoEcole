@@ -1,6 +1,3 @@
-/**
- * 
- */
 package chrono;
 
 import config.GameConfiguration;
@@ -11,13 +8,13 @@ import config.GameConfiguration;
  * 
  * We can only increment or decrement the value by 1 each time.
  * 
- * @author afatc
+ * @author Auto-Ecole
  *
  */
 public class Counter {
 	private int value;
 	private boolean run;
-	
+
 	public Counter(int value) {
 		this.value = value;
 	}
@@ -25,11 +22,11 @@ public class Counter {
 	public int getValue() {
 		return value;
 	}
-	
+
 	protected void setValue(int value) {
-			this.value = value;
+		this.value = value;
 	}
-	
+
 	public boolean isRun() {
 		return run;
 	}
@@ -37,14 +34,10 @@ public class Counter {
 	public void setRun(boolean run) {
 		this.run = run;
 	}
-	
+
 	public void init() {
 		setValue(GameConfiguration.STOP_DURATION);
 		setRun(false);
-	}
-	
-	public void increment() {
-		value++;
 	}
 
 	public void decrement() {

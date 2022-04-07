@@ -1,5 +1,12 @@
 package engine.map;
 
+
+/**
+ * The class to define the object map.
+ * 
+ * @author Auto-Ecole
+ */
+
 public class Map {
 
 	private Block[][] blocks;

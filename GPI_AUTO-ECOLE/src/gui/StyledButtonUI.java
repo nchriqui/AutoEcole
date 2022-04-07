@@ -10,6 +10,10 @@ import javax.swing.JComponent;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicButtonUI;
 
+/*
+ * This class serves to define and initialize the styled button 
+ */
+
 public class StyledButtonUI extends BasicButtonUI {
 
     @Override

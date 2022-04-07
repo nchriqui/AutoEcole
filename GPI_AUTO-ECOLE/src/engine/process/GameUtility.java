@@ -5,6 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+/**
+ * Class where the methods useful to the program are declared.
+ *  
+ * @author Auto-Ecole
+ *
+ */
 public class GameUtility {
 	public static Image readImage(String filePath) {
 		try {

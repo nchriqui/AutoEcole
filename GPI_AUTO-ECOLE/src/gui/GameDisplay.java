@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +8,17 @@ import javax.swing.JPanel;
 
 import config.GameConfiguration;
 import engine.fixed.Road;
+import engine.fixed.SpeedLimit;
 import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Car;
 import engine.mobile.Light;
 import engine.process.MapBuilder;
 import engine.process.MobileElementManager;
+
+/*
+ * This class contain the methods for the draw of the map 
+ */
 
 public class GameDisplay extends JPanel {
     private static final long serialVersionUID = 2L;
@@ -80,7 +84,15 @@ public class GameDisplay extends JPanel {
         for (Block prohibitedDirX : mapBuilder.getProhibitedDirs()) {
             paintStrategy.paintProhibitedDir(prohibitedDirX, g);
         }
-
+        
+        for (SpeedLimit speedLimitX : mapBuilder.getSpeedLimits()) {
+			paintStrategy.paintSpeedLimit(speedLimitX, g);
+		}
+		
+		for (Block treeX : mapBuilder.getTrees()) {
+			paintStrategy.paintTree(treeX, g);
+		}
+		
         Car car = manager.getCar();
         paintStrategy.paint(car, g);
 
@@ -112,35 +124,4 @@ public class GameDisplay extends JPanel {
 		}
     }
 
-    public Color checkColor(PaintStrategy paint) {
-        if (paint.isLightRed()) {
-            return Color.red;
-        } else if (paint.isLightOrange()) {
-            return Color.orange;
-        } else {
-            return Color.green;
-        }
-    }
-
-    public void nextRound(int turnNumber) {
-
-        if (turnNumber % 5000 == 0 && turnNumber > 1) {
-            if (checkColor(paintStrategy) == Color.orange) {
-                paintStrategy.setLightRed(true);
-                paintStrategy.setLightGreen(false);
-                paintStrategy.setLightOrange(false);
-                setPaintStrategy(paintStrategy);
-            } else if (checkColor(paintStrategy) == Color.red) {
-                paintStrategy.setLightRed(false);
-                paintStrategy.setLightGreen(true);
-                paintStrategy.setLightOrange(false);
-                setPaintStrategy(paintStrategy);
-            } else {
-                paintStrategy.setLightRed(false);
-                paintStrategy.setLightGreen(false);
-                paintStrategy.setLightOrange(true);
-                setPaintStrategy(paintStrategy);
-            }
-        }
-    }
 }
