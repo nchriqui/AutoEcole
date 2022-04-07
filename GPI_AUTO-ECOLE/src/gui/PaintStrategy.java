@@ -273,7 +273,7 @@ public class PaintStrategy extends JPanel {
 		int y = position.getLine();
 		int x = position.getColumn();
 
-		g.drawImage(image, x * blockSize, y * blockSize, blockSize, blockSize, null);
+		g.drawImage(image, x * blockSize, y * blockSize, null);
 
 	}
 
